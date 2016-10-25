@@ -1,0 +1,102 @@
+{# =================== Importa el archivo base html =================== #}
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+<!-- Page breadcrumb -->
+ <section id="mu-page-breadcrumb">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-12">
+         <div class="mu-page-breadcrumb-area">
+           <h2>Programas Acad&eacute;micos</h2>
+           <ol class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>            
+            <li class="active">Programas</li>
+          </ol>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+ <!-- End breadcrumb -->
+ <section id="mu-course-content">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-12">
+         <div class="mu-course-content-area">
+            <div class="row">
+              <div class="col-md-12"><!-- Set to 9 for add a sidebar -->
+                <!-- start course content container -->
+                <div class="mu-course-container">
+                  <div class="row" name="head">
+                    <!-- one program -->
+                    {% for programa in programas %}
+                  <div class="col-md-6 col-sm-6" id="program" data-cual="{{ forloop.counter }}">
+                    <div class="mu-latest-course-single">
+                      <figure class="mu-latest-course-img">
+                        <a href="{% url 'programa' programa.codigo %}"><img src="{% static programa.image_url %}" alt="img"></a>
+                        <figcaption class="mu-latest-course-imgcaption">
+                          <a href="{% url 'programa' programa.codigo %}">{{ programa.nombre|default:"Mi pez" }}</a>
+                          <span><i class="fa fa-clock-o"></i>10 Semestres</span>
+                        </figcaption>
+                      </figure>
+                      <div class="mu-latest-course-single-content">
+                        <h4><a href="{% url 'programa' programa.codigo %}">Lorem ipsum dolor sit amet.</a></h4>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet quod nisi quisquam modi dolore, dicta obcaecati architecto quidem ullam quia.</p>
+                        <div class="mu-latest-course-single-contbottom">
+                          <a class="mu-course-details" href="{% url 'programa' programa.codigo %}">Detalles</a>
+                          <!--<span class="mu-course-price" href="#">$165.00</span>-->
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
+                  {% empty %}
+                  <div class="">Sorry, no courses.</div>
+                  {% endfor %}
+                  <!-- end first program -->
+                  
+                  </div>
+                </div>
+                <!-- end course content container -->
+                <!-- start course pagination -->
+                <span class="hidden" id="numeroProgramas">{{ programas|length }}</span>
+                {% if programas|length > 6 %}
+                <div class="mu-pagination">
+                  <nav>
+                    <ul class="pagination">
+                      <!--<li class="disabled" disabled="true">
+                        <a href="#" aria-label="Previous">
+                          <span class="fa fa-angle-left"></span> Prev 
+                        </a>
+                      </li>-->
+                      <li class="active"><a class="thePagination" data-page="1" href="./">1</a></li>
+                      <!--<li>
+                        <a href="#" aria-label="Next">
+                         Next <span class="fa fa-angle-right"></span>
+                        </a>
+                      </li>-->
+                    </ul>
+                  </nav>
+                </div>
+                {% endif %}
+                <!-- end course pagination -->
+              </div>
+              <!--<div class="col-md-3">-->
+                <!-- start sidebar -->
+                <!-- / end sidebar -->
+             <!--</div>-->
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+ 
+ {% endblock content %}
+ 
+ {% block customjs %}
+ <script type="text/javascript" src="{% static 'assets/js/pages.js' %}"></script>
+ {% endblock customjs %}

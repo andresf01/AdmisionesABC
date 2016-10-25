@@ -1,0 +1,189 @@
+{# =================== Importa el archivo base html =================== #}
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+<!-- Page breadcrumb -->
+ <section id="mu-page-breadcrumb">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-12">
+         <div class="mu-page-breadcrumb-area">
+           <h2>{{ programa.nombre }}</h2>
+           <ol class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>            
+            <li><a href="{% url 'programas' %}">Programas</a></li>            
+            <li class="active">{{ programa.nombre|capfirst }}</li>
+          </ol>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+ <!-- End breadcrumb -->
+ <section id="mu-course-content">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-12">
+         <div class="mu-course-content-area">
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1">
+                <!-- start course content container -->
+                <div class="mu-course-container mu-course-details">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="mu-latest-course-single">
+                        <figure class="mu-latest-course-img">
+                          <a href="#"><img src="{% static programa.image_url %}" alt="img"></a>
+                          <figcaption class="mu-latest-course-imgcaption">
+                            <a href="#">{{ programa.nombre }}</a>
+                            <span><i class="fa fa-clock-o"></i>10 Semestres</span>
+                          </figcaption>
+                        </figure>
+                        <div class="mu-latest-course-single-content">
+                          <h2 class="text-center">{{ programa.nombre }}</h2>
+                          <h4>Informaci&oacute;n del Programa</h4>
+                          <ul>
+                            <li> <span>C&oacute;digo</span> <span>{{ programa.codigo }}</span></li>
+                            <li> <span>SNIES</span> <span>{{ programa.snies }}</span></li>
+                            <li> <span>Creditos</span> <span>{{ programa.creditos }}</span></li>
+                            <li> <span>Tipo de formaci&oacute;n</span> <span>{{ programa.formacion }}</span></li>
+                            <li> <span>T&iacute;tulo</span> <span>{{ programa.titulo }}</span></li>
+                            <li> <span>Metodolog&iacute;a</span> <span>{{ programa.metodologia }}</span></li>
+                          </ul>
+                          <h4>Description</h4>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet quod nisi quisquam modi dolore, dicta obcaecati architecto quidem ullam quia.</p>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo est itaque vero porro quasi illo ex consequuntur ad animi commodi, ipsam provident voluptas vel adipisci. Minima repellendus vel est, sequi labore quo ipsa voluptatem officiis ex fuga nemo quas. Eligendi inventore ducimus omnis, maxime, alias accusantium similique minus! Labore facilis qui, sunt, ipsam consectetur minus sapiente saepe numquam magnam quidem.</p>
+                          <blockquote>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti, placeat, ipsa. Modi sed quibusdam vel autem fugit, eaque, iste. Excepturi fugit dignissimos suscipit dolor perferendis debitis magni sed, quia ab.</p>
+                          </blockquote>
+                          
+                          <h4>Criterios de Ponderaci&oacute;n del Examen de Estado</h4>
+                          <div class="table-responsive">
+                            <table class="table">
+                            <thead>
+                              <tr>
+                                <th> Criterio </th>
+                                <th> Porcentaje </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td> Lectura Cr&iacute;tica </td>
+                                <td> {{ oferta.peso_lectura }} </td>
+                              </tr>
+                              <tr>
+                                <td> Matem&aacute;ticas </td>
+                                <td> {{ oferta.peso_matematicas }} </td>
+                              </tr>
+                              <tr>
+                                <td> Ciencias Naturales </td>
+                                <td> {{ oferta.peso_naturales }} </td>
+                              </tr>
+                              <tr>
+                                <td> Ciencias Sociales </td>
+                                <td> {{ oferta.peso_sociales }} </td>
+                              </tr>
+                              <tr>
+                                <td> Ingl&eacute;s </td>
+                                <td> {{ oferta.peso_ingles }} </td>
+                              </tr>
+                              <tr>
+                                <td> Prueba Espec&iacute;fica </td>
+                                <td> {{ oferta.peso_prueba }} </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          </div>
+                        </div>
+                      </div> 
+                    </div>                                   
+                  </div>
+                </div>
+                <!-- end course content container -->
+                <!-- start related course item -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="mu-related-item">
+                  <h3>Quiz&aacute; te podr&iacute;a interesar</h3>
+                  <div class="mu-related-item-area">
+                    <div id="mu-related-item-slide">
+                      <div class="col-md-6">
+                        <div class="mu-latest-course-single">
+                          <figure class="mu-latest-course-img">
+                            <a href="#"><img alt="img" src="assets/img/courses/1.jpg"></a>
+                            <figcaption class="mu-latest-course-imgcaption">
+                              <a href="#">Drawing</a>
+                              <span><i class="fa fa-clock-o"></i>90Days</span>
+                            </figcaption>
+                          </figure>
+                          <div class="mu-latest-course-single-content">
+                            <h4><a href="#">Lorem ipsum dolor sit amet.</a></h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet quod nisi quisquam modi dolore, dicta obcaecati architecto quidem ullam quia.</p>
+                            <div class="mu-latest-course-single-contbottom">
+                              <a href="#" class="mu-course-details">Details</a>
+                              <span href="#" class="mu-course-price">$165.00</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mu-latest-course-single">
+                          <figure class="mu-latest-course-img">
+                            <a href="#"><img alt="img" src="assets/img/courses/2.jpg"></a>
+                            <figcaption class="mu-latest-course-imgcaption">
+                              <a href="#">Drawing</a>
+                              <span><i class="fa fa-clock-o"></i>90Days</span>
+                            </figcaption>
+                          </figure>
+                          <div class="mu-latest-course-single-content">
+                            <h4><a href="#">Lorem ipsum dolor sit amet.</a></h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet quod nisi quisquam modi dolore, dicta obcaecati architecto quidem ullam quia.</p>
+                            <div class="mu-latest-course-single-contbottom">
+                              <a href="#" class="mu-course-details">Details</a>
+                              <span href="#" class="mu-course-price">$165.00</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mu-latest-course-single">
+                          <figure class="mu-latest-course-img">
+                            <a href="#"><img alt="img" src="assets/img/courses/3.jpg"></a>
+                            <figcaption class="mu-latest-course-imgcaption">
+                              <a href="#">Drawing</a>
+                              <span><i class="fa fa-clock-o"></i>90Days</span>
+                            </figcaption>
+                          </figure>
+                          <div class="mu-latest-course-single-content">
+                            <h4><a href="#">Lorem ipsum dolor sit amet.</a></h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet quod nisi quisquam modi dolore, dicta obcaecati architecto quidem ullam quia.</p>
+                            <div class="mu-latest-course-single-contbottom">
+                              <a href="#" class="mu-course-details">Details</a>
+                              <span href="#" class="mu-course-price">$165.00</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  </div>
+                </div>
+                <!-- end start related course item -->
+              </div>
+                  <!-- end single sidebar -->
+                <!--</aside>-->
+                <!-- / end sidebar -->
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+ 
+
+{% endblock content %}
