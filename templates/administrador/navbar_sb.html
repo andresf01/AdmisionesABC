@@ -50,7 +50,7 @@
                     <a href="{% url 'administrador' %}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-user fa-fw"></i> Empleados<span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-users fa-fw"></i> Empleados<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
                             <a href="{% url 'crear_empleado' %}">Registrar Empleado</a>
@@ -60,6 +60,47 @@
                         <!--</li>-->
                         <li>
                             <a href="{% url 'listar_empleados' %}">Listar Empleados</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-wpforms fa-fw"></i> Admisiones<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="#">Periodos <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="{% url 'crear_periodo' %}">Registrar Periodo</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'listar_periodos' %}">Listar Periodos</a>
+                                </li>
+                            </ul>
+                             <!--/.nav-third-level -->
+                        </li>
+                        <li>
+                            <a href="#">Inscripciones <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="{% url 'listar_aspirantes' %}">Listar Aspirantes</a>
+                                </li>
+                            </ul>
+                             <!--/.nav-third-level -->
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-mortar-board fa-fw"></i> Programas<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <li>
+                                <a href="{% url 'crear_programa' %}">Registrar Programa</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'listar_programas' %}">Listar Programas</a>
+                            </li>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
