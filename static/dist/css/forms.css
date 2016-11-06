@@ -1,0 +1,27 @@
+.buttons{
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 30px;
+}
+
+/*.alert{*/
+/*    padding: 5px 5px 5px 15px;*/
+/*}*/
+
+@media (max-width: 768px) {
+  .btn-responsive {
+    margin:2px 4px;
+    /*padding:2px 4px;*/
+    /*font-size:80%;*/
+    /*line-height: 1;*/
+    /*border-radius:3px;*/
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  .btn-responsive {
+    margin:4px 9px;
+    /*font-size:90%;*/
+    /*line-height: 1.2;*/
+  }
+}

@@ -29,6 +29,28 @@
          <div class="mu-course-content-area">
             <div class="row">
               <div class="col-md-12"><!-- Set to 9 for add a sidebar -->
+              <!-- start course pagination -->
+                <!--<span class="hidden" id="numeroProgramas">{{ programas|length }}</span>-->
+                {% if programas|length > 6 %}
+                <div class="mu-pagination">
+                  <nav>
+                    <ul class="pagination">
+                      <!--<li class="disabled" disabled="true">
+                        <a href="#" aria-label="Previous">
+                          <span class="fa fa-angle-left"></span> Prev 
+                        </a>
+                      </li>-->
+                      <li class="active"><a class="thePagination" data-page="1" href="./">1</a></li>
+                      <!--<li>
+                        <a href="#" aria-label="Next">
+                         Next <span class="fa fa-angle-right"></span>
+                        </a>
+                      </li>-->
+                    </ul>
+                  </nav>
+                </div>
+                {% endif %}
+                <!-- end course pagination -->
                 <!-- start course content container -->
                 <div class="mu-course-container">
                   <div class="row" name="head">
@@ -44,8 +66,8 @@
                         </figcaption>
                       </figure>
                       <div class="mu-latest-course-single-content">
-                        <h4><a href="{% url 'programa' programa.codigo %}">Lorem ipsum dolor sit amet.</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet quod nisi quisquam modi dolore, dicta obcaecati architecto quidem ullam quia.</p>
+                        <h4><a href="{% url 'programa' programa.codigo %}">Descripci&oacute;n del Programa</a></h4>
+                        <p>{{ programa.descripcion|truncatewords:10 }}</p>
                         <div class="mu-latest-course-single-contbottom">
                           <a class="mu-course-details" href="{% url 'programa' programa.codigo %}">Detalles</a>
                           <!--<span class="mu-course-price" href="#">$165.00</span>-->

@@ -1,0 +1,14 @@
+{% if messages %}
+<div class="row" {% if message.tags != 'success' %} id="message-fade" {% endif %}>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %} alert-success {% else %} alert-danger {% endif %} alert-dismissable alert-link">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <p{% if message.tags %} class=" {{ message.tags }}" {% endif %}>{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

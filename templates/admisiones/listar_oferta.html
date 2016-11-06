@@ -9,16 +9,14 @@
 {% endblock %}
 
 {% block content %}
-<div id="page-wrapper" class="tiki full-screen-w">
+<div id="page-wrapper" class="full-screen-w">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Oferta de Programas</h1>
+            <h1 class="page-header">Oferta de Programas del Periodo: <a href="{% url 'listar_periodos' %}">{{ periodo }}</a></h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
-    <p>
-        Periodo: <a href="{% url 'listar_periodos' %}">{{ periodo }}</a>
-    </p>
+    {% include 'messages.html' %}
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
@@ -54,7 +52,7 @@
                                 <td class="center">{{ o.peso_sociales }}</a></td>
                                 <td class="center">{{ o.peso_ingles }}</a></td>
                                 <td class="center">{{ o.peso_prueba }}</a></td>
-                                <td class="center"><a href="{% url 'home' %}">Editar</td>
+                                <td class="center"><a href="{% url 'editar_oferta' o.id %}">Editar</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -81,10 +79,12 @@
 <script src="{% static 'sbadmin/vendor/datatables-responsive/dataTables.responsive.js' %}"></script>
 
 <script>
-$(document).ready(function() {
-    $('#dataTables-example').DataTable({
-        responsive: true
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
     });
-});
+    itemWithTimer("#message-fade", 10);
 </script>
+
 {% endblock %}

@@ -1,3 +1,3 @@
-import os
+# import os
 # Init de service of database
-os.system('sudo service postgresql start')
+# os.system('sudo service postgresql start')

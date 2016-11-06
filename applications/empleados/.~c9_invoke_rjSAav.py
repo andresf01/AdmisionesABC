@@ -82,10 +82,10 @@ def setpassword_empleado(request, empleado_id):
     form = SetPasswordEmpleadoForm(empleado)
     if request.method == 'POST':
         # importante aqui siempre mandar el POST al form
-        form = SetPasswordEmpleadoForm(empleado, request.POST)
+        form = SetPasswordEmpleadoForm(emprequest.POST)
         if form.is_valid():
-            form.save()
+            empleado.save()
             messages.success(request, "Contraseña cambiada satisfactoriamente.")
             return redirect('listar_empleados')
-    # BOKUUUUUUUUUUUUUUUUUUUU KUBOOOOOOOOOOOOOOOOOOOO
-    return render(request, 'empleados/setpassword_empleado.html', {'form': form, 'empleado': empleado, 'user': request.user.empleado})
+
+    return render(request, 'empleados/setpassword_empleado.html', {'form': form,  'user': request.user.empleado})

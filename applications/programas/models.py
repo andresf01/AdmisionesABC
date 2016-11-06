@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.db import models
@@ -31,7 +32,8 @@ class Programa(models.Model):
     tipo = models.CharField(max_length=64, choices=TIPO_CHOICES)
     metodologia = models.CharField(max_length=64, choices=METODOLOGIA_CHOICES)
     titulo = models.CharField(max_length=64)
+    descripcion = models.CharField(max_length=512)
     image_url = models.CharField(max_length=256)
     
-    def __str__(self):
+    def __unicode__(self):
         return self.codigo + ' - ' + self.nombre

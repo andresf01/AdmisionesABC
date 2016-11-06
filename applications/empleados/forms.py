@@ -4,41 +4,11 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 
+from admisionesabc.global_variables import *
 from models import *
 
 
-PERIODO = 'Febrero-Junio 2017'
-
-
-# class CrearEmpleadoForm(ModelForm):
-#     required_css_class = 'required'
-#     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput(attrs={'placeholder':'Escriba una contraseña', 'required':'required'}))
-#     password2 = forms.CharField(label='Confirmar Contraseña', widget=forms.PasswordInput(attrs={'placeholder':'Confirme la contraseña', 'required':'required'}))
-
-#     def __init__(self, *args, **kwargs):
-#         super(CrearEmpleadoForm, self).__init__(*args, **kwargs)
-        
-#         # Campos de usario de django
-#         self.fields['username'].widget.attrs.update({'placeholder': 'Escriba un nombre de usuario', 'required':'required'})
-#         self.fields['username'].label = 'Usuario'
-#         # self.fields['password'].widget.attrs.update({'placeholder': 'Escriba una contraseña', 'required':'required'})
-#         # self.fields['password'].widget = forms.PasswordInput(attrs={'placeholder': 'Escriba una contraseña', 'required':'required'})
-#         # self.fields['password'].label = 'Contraseña'
-#         self.fields['email'].widget.attrs.update({'placeholder': 'Escriba su correo electronico', 'label':'Correo Electronico', 'required':'required'})
-#         self.fields['email'].label = 'Correo Electronico'
-        
-#         # Campos del empleado
-#         self.fields['documento'].widget.attrs.update({'placeholder': 'Escriba su numero de documento', 'required':'required'})
-#         self.fields['tipo_documento'].widget.attrs.update({'placeholder': 'Seleccione el tipo de documento', 'required':'required'})
-#         self.fields['nombre'].widget.attrs.update({'placeholder': 'Escriba su nombre', 'required':'required'})
-#         self.fields['apellido'].widget.attrs.update({'placeholder': 'Escriba sus apellidos', 'required':'required'})
-#         self.fields['direccion'].widget.attrs.update({'placeholder': 'Escriba su direccion', 'required':'required'})
-#         self.fields['telefono'].widget.attrs.update({'placeholder': 'Escriba su telefono', 'required':'required'})
-
-
-#     class Meta:
-#         model = Empleado
-#         fields = ('username', 'documento', 'tipo_documento', 'nombre', 'apellido', 'email', 'direccion', 'telefono')
+# PERIODO = 'Febrero-Junio 2017'
 
 
 class CrearEmpleadoForm(UserCreationForm):
@@ -117,6 +87,14 @@ class EditarEmpleadoForm(UserChangeForm):
         documento = self.cleaned_data['documento']
         if not documento.isdigit():
             raise forms.ValidationError("El numero de documento debe contener solo numeros.")
+        empleado = None
+        try:
+            empleado = Empleado.objects.get(documento=documento)
+        except Exception:
+            pass
+        if empleado:
+            if self.instance.id != empleado.id:
+                raise forms.ValidationError("El numero de documento ya se encuentra registrado.")
         return documento
         
     
@@ -131,7 +109,7 @@ class SetPasswordEmpleadoForm(SetPasswordForm):
     required_css_class = 'required'
     
     def __init__(self, user, *args, **kwargs):
-        super(SetPasswordEmpleadoForm, self).__init__(*args, **kwargs)
+        super(SetPasswordEmpleadoForm, self).__init__(user, *args, **kwargs)
         
         # Campos de formulario de django
         self.fields['new_password1'].widget.attrs.update({'placeholder': 'Escriba una contraseña', 'required':'required'})

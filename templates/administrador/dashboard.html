@@ -1,4 +1,5 @@
 {% extends "administrador/base_sb.html" %}
+{% load staticfiles %}
 
 {% block content %}
 <div id="page-wrapper">
@@ -542,4 +543,11 @@
     <!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
+{% endblock %}
+
+{% block specific-js %}
+<!-- Morris Charts JavaScript -->
+<script src="{% static 'sbadmin/vendor/raphael/raphael.min.js' %}"></script>
+<script src="{% static 'sbadmin/vendor/morrisjs/morris.min.js' %}"></script>
+<script src="{% static 'sbadmin/data/morris-data.js' %}"></script>
 {% endblock %}

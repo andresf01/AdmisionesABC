@@ -3,41 +3,13 @@
 {% load bootstrap3 %}
 
 {% block specific-css %}
-    <style type="text/css">
-    .buttons{
-        width: 80%;
-        margin-left: 10%;
-        margin-top: 30px;
-    }
-    
-    .alert{
-        padding: 5px 5px 5px 15px;
-    }
-    
-    @media (max-width: 768px) {
-      .btn-responsive {
-        margin:2px 4px;
-        /*padding:2px 4px;*/
-        /*font-size:80%;*/
-        /*line-height: 1;*/
-        /*border-radius:3px;*/
-      }
-    }
-    
-    @media (min-width: 769px) and (max-width: 992px) {
-      .btn-responsive {
-        margin:4px 9px;
-        /*font-size:90%;*/
-        /*line-height: 1.2;*/
-      }
-    }
-    </style>
+    <link href="{% static 'dist/css/forms.css' %}" rel="stylesheet"></link>
     {{ form.media }}
 {% endblock %}
 
 {% block content %}
 {# ================ insert here all the content of the page =============== #}
-<div id="page-wrapper" class="tiki full-screen-w">
+<div id="page-wrapper" class="full-screen-w">
     <div class="row">
         <div class="col-lg-12">
             {% if editar%}
@@ -49,17 +21,7 @@
         <!-- /.col-lg-12 -->
     </div>
     <!-- /.row -->
-    {% if messages %}
-    <div class="row" id="message">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            {% for message in messages %}
-            <div class="alert {% if message.tags == 'success' %} alert-success {% else %} alert-danger {% endif %}">
-                <strong {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</strong>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
+    {% include 'messages.html' %}
     <div class="row">
         <div class="col-lg-12">
             <div class="panel-body">
@@ -102,7 +64,7 @@
                                 {% if editar %}
                                 <div class="row buttons">
                                     <div class="col-xs-12 col-sm-12  col-md-4 col-lg-4">
-                                        <a type="return" class="btn btn-warning btn-block" data-toggle="modal" data-target="#myModal" href="{% url 'listar_empleados' %}">
+                                        <a type="return" class="btn btn-warning btn-block" href="{% url 'listar_empleados' %}">
                                             Regresar
                                         </a>
                                     </div>
@@ -111,7 +73,7 @@
                                 {% else %}
                                 <div class="row buttons">
                                     <div class="col-xs-12 col-sm-12  col-md-4 col-lg-4">
-                                        <a type="return" class="btn btn-warning btn-block" data-toggle="modal" data-target="#myModal" href="{% url 'listar_empleados' %}">
+                                        <a type="return" class="btn btn-warning btn-block" href="{% url 'listar_empleados' %}">
                                             Regresar
                                         </a>
                                     </div>
@@ -133,15 +95,7 @@
 {% endblock %}
 
 {% block specific-js %}
-<script src="{% static 'vendor/bootbox/bootbox.min.js' %}"></script>
 <script type="text/javascript">
-function itemWithTimer(id, tiempo){
-  $(id).show();
-  setTimeout(function() { $(id).hide(); }, tiempo*1000);
-}
-itemWithTimer("#message", 5)
-{% if message %}
-// bootbox.alert("{{ message }}");
-{% endif %}
+    itemWithTimer("#message-fade", 10)
 </script>
 {% endblock %}

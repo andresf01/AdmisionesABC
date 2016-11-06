@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap3',
     'applications.start',
-    'applications.admisiones',
     'applications.programas',
     'applications.empleados',
+    'applications.admisiones',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -70,6 +70,7 @@ TEMPLATES = [
                 'django.core.context_processors.static',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'applications.admisiones.context_processors.recaptcha',
             ],
         },
     },
@@ -142,3 +143,6 @@ STATICFILES_DIRS = (
 
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/init/dashboard'
+
+GOOGLE_RECAPTCHA_SITE_KEY = '6LerIQsUAAAAAHtdTq2eDeawxSZwaKLIE-BwdU2H'
+GOOGLE_RECAPTCHA_SECRET_KEY = '6LerIQsUAAAAAMq6zXgy67GD5w6PUvlaMZt7kT1D'

@@ -12,7 +12,7 @@ import applications.admisiones.views as views
 
 def home(request):
     # print Group.objects.get(name='Aspirante').user_set.all()
-    return render(request, 'init/index.html')
+    return render(request, 'init/home.html')
 
 def custom_login(request):
     if request.user.is_authenticated():
