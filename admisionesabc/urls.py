@@ -21,7 +21,8 @@ import applications.start.urls
 import applications.administrador.urls
 import applications.admisiones.urls
 import applications.programas.urls
-import applications.icfes.urls
+import applications.pagos.urls
+# import applications.icfes.urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -29,5 +30,7 @@ urlpatterns = [
     url(r'^administrador/', include(applications.administrador.urls)),
     url(r'^admisiones/', include(applications.admisiones.urls)),
     url(r'^programas/', include(applications.programas.urls)),
-    url(r'^icfes/', include(applications.icfes.urls)),
+    url(r'^pagos/', include(applications.pagos.urls)),
+    # url(r'^icfes/', include(applications.icfes.urls)),
+    url(r'^select2/', include('django_select2.urls')),
 ]

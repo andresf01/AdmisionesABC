@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
+from django.utils import timezone
 
 from applications.programas.models import *
 
@@ -14,6 +16,8 @@ class Periodo(models.Model):
     nombre = models.CharField(max_length=64, unique=True)
     puntaje_minimo = models.IntegerField(verbose_name='Puntaje Mínimo')
     programas = models.ManyToManyField(Programa, through='Oferta')
+    activo = models.BooleanField(default=False)
+    hay_resultados = models.BooleanField(default=False, verbose_name='Resultados')
     
     def __unicode__(self):
         return self.nombre
@@ -38,8 +42,8 @@ class Oferta(models.Model):
     periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE)
     programa = models.ForeignKey(Programa, on_delete=models.CASCADE)
     cupo = models.IntegerField()
-    peso_lectura = models.IntegerField(verbose_name='Peso Lectura Critica')
-    peso_matematicas = models.IntegerField(verbose_name='Peso Matematicas')
+    peso_lectura = models.IntegerField(verbose_name='Peso Lectura Crítica')
+    peso_matematicas = models.IntegerField(verbose_name='Peso Matemáticas')
     peso_naturales = models.IntegerField(verbose_name='Peso Ciencias Naturales')
     peso_sociales = models.IntegerField(verbose_name='Peso Ciencias Sociales')
     peso_ingles = models.IntegerField(verbose_name='Peso Ingles')
@@ -47,7 +51,7 @@ class Oferta(models.Model):
     
     def __unicode__(self):
         return self.programa.codigo + ' - ' + self.programa.nombre
-    
+
 
 class Aspirante(User):
     TIPO_ID_CHOICES = (
@@ -63,9 +67,14 @@ class Aspirante(User):
     colegio = models.CharField(max_length=64)
     nombre = models.CharField(max_length=64)
     apellido = models.CharField(max_length=64)
-    direccion = models.CharField(max_length=64)
-    telefono = models.CharField(max_length=64)
+    direccion = models.CharField(max_length=64, verbose_name='Dirección')
+    telefono = models.CharField(max_length=64, verbose_name='Teléfono')
     programa = models.ForeignKey(Oferta, on_delete=models.CASCADE)
+    ponderado = models.DecimalField(default=0, max_digits=5, decimal_places=2)
+    admitido = models.BooleanField(default=False)
+    nota_admision = models.CharField(max_length=128, default='', verbose_name='Nota Admisión')
     
     def __unicode__(self):
         return self.nombre + ' ' + self.apellido
+        
+        

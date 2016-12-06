@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'applications.programas',
     'applications.empleados',
     'applications.admisiones',
+    'applications.pagos',
+    'django_select2',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -124,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
@@ -146,3 +148,21 @@ LOGIN_REDIRECT_URL = '/init/dashboard'
 
 GOOGLE_RECAPTCHA_SITE_KEY = '6LerIQsUAAAAAHtdTq2eDeawxSZwaKLIE-BwdU2H'
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LerIQsUAAAAAMq6zXgy67GD5w6PUvlaMZt7kT1D'
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    'select2': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
+# Set the cache backend to select2
+SELECT2_CACHE_BACKEND = 'select2'

@@ -1,0 +1,27 @@
+{# =================== Importa el archivo base html =================== #}
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+<!-- Start error section  -->
+  <section id="mu-error">
+    <div class="container">
+      <div class="row">
+       <div class="col-md-12">
+          <div class="mu-error-area">
+            <p>Oops! Los resultados no han sido publicados aun.</p>
+            <!--<span>La página que estas buscando no está disponible, ha sido removida, o ha cambiado.</span>-->
+            <!--<h2>404</h2>-->
+            <a class="mu-post-btn" href="{% url 'admisiones' %}">Volver a Admisiones</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ <!-- End error section  -->
+
+{% endblock content %}
+
+

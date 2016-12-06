@@ -34,7 +34,6 @@
                                 <th>Nombre</th>
                                 <th>Apellido</th>
                                 <th></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,7 +44,6 @@
                                 <td class="center">{{ empleado.cargo }}</td>
                                 <td class="center">{{ empleado.nombre }}</td>
                                 <td class="center">{{ empleado.apellido }}</td>
-                                <td class="center"><a href="{% url 'ver_empleado' empleado.documento %}">Ver</td>
                                 <td class="center"><a href="{% url 'editar_empleado' empleado.documento %}">Editar</td>
                             </tr>
                             {% endfor %}

@@ -3,6 +3,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
+from django_select2.forms import Select2MultipleWidget, Select2Widget
 
 from admisionesabc.global_variables import *
 from models import *
@@ -41,6 +42,10 @@ class CrearEmpleadoForm(UserCreationForm):
     class Meta:
         model = Empleado
         fields = ('username', 'documento', 'tipo_documento', 'nombre', 'apellido', 'email', 'cargo', 'direccion', 'telefono')
+        widgets = {
+            'tipo_documento': Select2Widget,
+            'cargo': Select2Widget,
+        }
         
         
     def clean_documento(self):
@@ -81,6 +86,10 @@ class EditarEmpleadoForm(UserChangeForm):
     class Meta:
         model = Empleado
         fields = ('username', 'documento', 'tipo_documento', 'email', 'cargo', 'nombre', 'apellido', 'direccion', 'telefono',)
+        widgets = {
+            'tipo_documento': Select2Widget,
+            'cargo': Select2Widget,
+        }
         
         
     def clean_documento(self):

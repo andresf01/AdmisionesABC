@@ -24,16 +24,16 @@ class Programa(models.Model):
         ('A DISTANCIA', 'A DISTANCIA'),
     )
     
-    codigo = models.CharField(max_length=8, unique=True)
+    codigo = models.CharField(max_length=8, unique=True, verbose_name='Código')
     nombre = models.CharField(max_length=64)
     snies = models.CharField(max_length=8, verbose_name='Registro SNIES')
-    creditos = models.IntegerField()
-    formacion = models.CharField(max_length=64, choices=FORMACION_CHOICES)
+    creditos = models.IntegerField(verbose_name='Créditos')
+    formacion = models.CharField(max_length=64, choices=FORMACION_CHOICES, verbose_name='Formación')
     tipo = models.CharField(max_length=64, choices=TIPO_CHOICES)
-    metodologia = models.CharField(max_length=64, choices=METODOLOGIA_CHOICES)
-    titulo = models.CharField(max_length=64)
-    descripcion = models.CharField(max_length=512)
-    image_url = models.CharField(max_length=256)
+    metodologia = models.CharField(max_length=64, choices=METODOLOGIA_CHOICES, verbose_name='Metodología')
+    titulo = models.CharField(max_length=64, verbose_name='Título')
+    descripcion = models.CharField(max_length=512, verbose_name='Descripción')
+    image_url = models.CharField(max_length=256, verbose_name='URL Imagen')
     
     def __unicode__(self):
         return self.codigo + ' - ' + self.nombre

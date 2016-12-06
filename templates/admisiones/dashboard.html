@@ -1,0 +1,88 @@
+{# =================== Importa el archivo base html =================== #}
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+
+{% block specific-css %}
+<style type='text/css'>
+.data > h2 {
+ margin-top: 0px;
+}
+
+#mu-error {
+ padding: 50px 0px;
+}
+
+hr {
+ margin-top:10px;
+ margin-bottom:25px;
+ box-shadow:0px 0px 10px #000000;
+}
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Page breadcrumb -->
+ <section id="mu-page-breadcrumb">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-12">
+         <div class="mu-page-breadcrumb-area">
+           <h2>Bienvenido {{ aspirante.nombre }}</h2>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+ <!-- End breadcrumb -->
+
+  <!-- Start error section  -->
+  <section id="mu-error">
+    <div class="container">
+      <div class="row">
+       <div class="col-md-12">
+        <div class="col-md-4"><h3>DATOS PERSONALES</h3></div>
+        <div class="col-md-8 data">
+         <big>Nombre</big>
+         <h2>{{ aspirante.nombre }} {{ aspirante.apellido|default:"-" }}</h2>
+         <big>SNP</big>
+         <h2>{{ aspirante.snp|default:"-" }}</h2>
+         <big>Puntaje Global</big>
+         <h2>{{ aspirante.puntaje_global|default:"-" }}</h2>
+         <big>Dirección</big>
+         <h2>{{ aspirante.direccion|default:"-" }}</h2>
+         <big>Teléfono</big>
+         <h2>{{ aspirante.telefono|default:"-" }}</h2>
+         <big>Programa</big>
+         <h2>{{ aspirante.programa|default:"-" }}</h2>
+         <big>Colegio</big>
+         <h2>{{ aspirante.colegio|default:"-" }}</h2>
+        </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+       <div class="col-md-12">
+        <div class="col-md-4"><h3>INFORMACIÓN DE PAGO</h3></div>
+        <div class="col-md-8 data">
+         <big>Estado</big>
+         {% if aspirante.pago.pagado %}
+         <h2>Pagado</h2>
+         {% else %}
+         <h2 class='text-danger'>No pagado</h2>
+         <big>Pago</big>
+         <h2>Realizar pago mediante SPO</h2>
+         <h2><a href="{% url 'realizar_pago' aspirante.pago.id %}"><button class="btn btn-danger btn-lg">Pagar</button></a></h2>
+         {% endif %}
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ <!-- End error section  -->
+
+{% endblock content %}

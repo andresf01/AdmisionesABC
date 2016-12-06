@@ -38,19 +38,17 @@
                                 <th>Programa Academico</th>
                                 <th>Periodo</th>
                                 <th></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for aspirante in aspirantes %}
                             <tr class="odd gradeX">
                                 <td class="center">{{ aspirante.documento }}</td>
-                                <td class="center">{{ aspirante.tipo_documento }}</a></td>
-                                <td class="center">{{ aspirante.nombre }}</a></td>
-                                <td class="center">{{ aspirante.apellido }}</a></td>
-                                <td class="center">{{ aspirante.programa }}</a></td>
-                                <td class="center">{{ aspirante.programa.periodo.nombre }}</a></td>
-                                <td class="center"><a href="{% url 'home' %}">Ver</td>
+                                <td class="center">{{ aspirante.tipo_documento }}</td>
+                                <td class="center">{{ aspirante.nombre }}</td>
+                                <td class="center">{{ aspirante.apellido }}</td>
+                                <td class="center">{{ aspirante.programa }}</td>
+                                <td class="center">{{ aspirante.programa.periodo.nombre }}</td>
                                 <td class="center"><a href="{% url 'editar_aspirante' aspirante.documento %}">Editar</td>
                             </tr>
                             {% endfor %}

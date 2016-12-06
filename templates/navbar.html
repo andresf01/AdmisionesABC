@@ -9,7 +9,7 @@
             <div class="mu-header-top-left">
               <div class="mu-top-email">
                 <i class="fa fa-envelope"></i>
-                <span>info@uniabc.edu.co</span>
+                <span><a href="mailto:info@uniabc.edu.co">info@uniabc.edu.co</a></span>
               </div>
               <div class="mu-top-phone">
                 <i class="fa fa-phone"></i>
@@ -58,7 +58,7 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul id="top-menu" class="nav navbar-nav navbar-right main-nav">
-        <li id="b_" ><a href="{% url 'home' %}">Home</a></li>
+        <li id="b_" ><a href="{% url 'home' %}">Inicio</a></li>
         <!-- <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Course <span class="fa fa-angle-down"></span></a>
           <ul class="dropdown-menu" role="menu">
@@ -77,8 +77,25 @@
         <li id="b_admisiones"><a href="{% url 'admisiones' %}">Admisiones</a></li>
         <li id="b_programas"><a href="{% url 'programas'%}">Programas</a></li>
         <!--<li><a href="{# % url 'home' % #}">Nosotros</a></li>-->
-        <li id="b_login"><a href="{% url 'login' %}">Iniciar Sesion</a></li>
-        <li id="b_logout"><a href="{% url 'logout' %}">Cerrar Sesion</a></li>
+        {% if not request.user.is_authenticated %}
+        <li id="b_login"><a href="{% url 'login' %}">Iniciar Sesi&oacute;n</a></li>
+        {% elif request.user.is_authenticated %}
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-user fa-fw"></i> {{ user.username }} <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+                <li><a href="{% url 'dashboard' %}"><i class="fa fa-user fa-fw"></i> Dashboard</a>
+                </li>
+                <!--<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>-->
+                <!--<li class="divider"></li>-->
+                <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out fa-fw"></i> Cerrar Sesi&oacute;n</a>
+                </li>
+            </ul>
+        </li>
+        <!-- /.dropdown -->
+        {% endif %}
         <!--<li><a href="#" id="mu-search-icon"><i class="fa fa-search"></i></a></li>-->
       </ul>
     </div><!--/.nav-collapse -->

@@ -4,6 +4,8 @@ import views
 import applications.empleados.views as empleados_views
 import applications.programas.views as programas_views
 import applications.admisiones.views as admisiones_views
+import applications.reportes.views as reportes_views
+import applications.pagos.views as pagos_views
 
 # urls administrador
 
@@ -33,5 +35,15 @@ urlpatterns = [
     url(r'^periodos/listar-aspirantes/', admisiones_views.listar_aspirantes, name='listar_aspirantes'),
     url(r'^periodos/listar-oferta/(?P<periodo_id>.+)/', admisiones_views.listar_oferta_periodo, name='listar_oferta_periodo'),
     
-    url(r'^periodos/editar-aspirante/(?P<aspirante_id>\d+)/', admisiones_views.editar_aspirante, name='editar_aspirante')
+    url(r'^periodos/editar-aspirante/(?P<aspirante_id>\d+)/', admisiones_views.editar_aspirante, name='editar_aspirante'),
+    
+    url(r'^periodos/calcular-admitidos/(?P<periodo_id>.+)/', admisiones_views.calcular_admitidos, name='calcular_admitidos'),
+    url(r'^periodos/listar-resultados/(?P<periodo_id>.+)/', admisiones_views.listar_resultados, name='listar_resultados'),
+    
+    url(r'^pagos/listar-pagos/', pagos_views.listar_pagos, name='listar_pagos'),
+    url(r'^pagos/listar-pagos/(?P<periodo_id>.+)/', pagos_views.listar_pagos_periodo, name='listar_pagos_periodo'),
+    url(r'^pagos/editar-pago/(?P<pago_id>.+)/', pagos_views.editar_pago, name='editar_pago'),
+    
+    url(r'^reportes/inscritos-por-periodo/', reportes_views.inscritos_por_periodo, name='inscritos_por_periodo'),
+    url(r'^reportes/inscritos-por-oferta/', reportes_views.inscritos_por_oferta, name='inscritos_por_oferta'),
 ]

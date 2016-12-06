@@ -16,7 +16,7 @@
         <!-- /.dropdown -->
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-user fa-fw"></i> {{ user.username }} <i class="fa fa-caret-down"></i>
+                <i class="fa fa-user fa-fw"></i> {{ request.user.username }} <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user">
                 <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
@@ -79,6 +79,9 @@
                                 <li>
                                     <a href="{% url 'crear_oferta' %}">Registrar Oferta</a>
                                 </li>
+                                <li>
+                                    <a href="{% url 'realizar_pago' pago_id=2 %}">Pay Testing</a>
+                                </li>
                             </ul>
                              <!--/.nav-third-level -->
                         </li>
@@ -87,6 +90,15 @@
                             <ul class="nav nav-third-level">
                                 <li>
                                     <a href="{% url 'listar_aspirantes' %}">Listar Aspirantes</a>
+                                </li>
+                            </ul>
+                             <!--/.nav-third-level -->
+                        </li>
+                        <li>
+                            <a href="#">Pagos <span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="{% url 'listar_pagos' %}">Listar Pagos</a>
                                 </li>
                             </ul>
                              <!--/.nav-third-level -->
@@ -103,6 +115,20 @@
                             </li>
                             <li>
                                 <a href="{% url 'listar_programas' %}">Listar Programas</a>
+                            </li>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-bar-chart fa-fw"></i> Reportes<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <li>
+                                <a href="{% url 'inscritos_por_periodo' %}">Inscritos por Periodo</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'inscritos_por_oferta' %}">Inscritos por Oferta</a>
                             </li>
                         </li>
                     </ul>

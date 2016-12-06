@@ -4,6 +4,7 @@
 
 {% block specific-css %}
     <link href="{% static 'dist/css/forms.css' %}" rel="stylesheet"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     {{ form.media }}
 {% endblock %}
 
@@ -59,6 +60,12 @@
                                 
                                 <!--********************************** Tipo documento **********************************-->
                                 {% bootstrap_field form.telefono layout='horizontal' horizontal_label_class='col-lg-2' horizontal_field_class='form-group col-lg-10' form_group_class='row' %}
+                                
+                                {% bootstrap_field form.ponderado layout='horizontal' horizontal_label_class='col-lg-2' horizontal_field_class='form-group col-lg-10' form_group_class='row' %}
+                                
+                                {% bootstrap_field form.admitido layout='horizontal' horizontal_label_class='col-lg-2' horizontal_field_class='form-group col-lg-10' form_group_class='row' %}
+                                
+                                {% bootstrap_field form.nota_admision layout='horizontal' horizontal_label_class='col-lg-2' horizontal_field_class='form-group col-lg-10' form_group_class='row' %}
 
                                 <div class="row buttons">
                                     <div class="col-xs-12 col-sm-12  col-md-4 col-lg-4">

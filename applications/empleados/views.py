@@ -28,10 +28,10 @@ def crear_empleado(request):
                 elif empleado.cargo == 'OPERADOR':
                     grupo = Group.objects.get(name='Operador')
                 grupo.user_set.add(empleado)
-                return render(request, 'empleados/crear_empleado.html', {'form': CrearEmpleadoForm(), 'user': request.user.empleado, 'editar': False})
+                return render(request, 'empleados/crear_empleado.html', {'form': CrearEmpleadoForm(), 'editar': False})
             messages.error(request, "Error al registrar el empleado.")
         
-    return render(request, 'empleados/crear_empleado.html', {'form': form, 'user': request.user.empleado, 'editar': False})
+    return render(request, 'empleados/crear_empleado.html', {'form': form, 'editar': False})
     
     
 @login_required
@@ -52,7 +52,7 @@ def editar_empleado(request, empleado_id):
             return redirect('listar_empleados')
         messages.error(request, "Error al modificar el empleado.")
 
-    return render(request, 'empleados/crear_empleado.html', {'form': form, 'user': request.user.empleado, 'editar': True})
+    return render(request, 'empleados/crear_empleado.html', {'form': form, 'editar': True})
     
     
 @login_required
@@ -69,7 +69,7 @@ def ver_empleado(request, empleado_id):
 @login_required
 def listar_empleados(request):
     empleados = Empleado.objects.all().exclude(username=request.user.username)
-    return render(request, 'empleados/listar_empleados.html', {'empleados': empleados, 'user': request.user.empleado})
+    return render(request, 'empleados/listar_empleados.html', {'empleados': empleados})
     
     
 @login_required
@@ -87,5 +87,4 @@ def setpassword_empleado(request, empleado_id):
             form.save()
             messages.success(request, "Contraseña cambiada satisfactoriamente.")
             return redirect('listar_empleados')
-    # BOKUUUUUUUUUUUUUUUUUUUU KUBOOOOOOOOOOOOOOOOOOOO
-    return render(request, 'empleados/setpassword_empleado.html', {'form': form, 'empleado': empleado, 'user': request.user.empleado})
+    return render(request, 'empleados/setpassword_empleado.html', {'form': form, 'empleado': empleado})

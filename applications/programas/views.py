@@ -4,27 +4,26 @@ from django.contrib import messages
 
 from forms import *
 from models import *
-# from applications.admisiones.models import *
+from admisionesabc.global_variables import *
+from applications.admisiones.models import *
 
 # Create your views here.
 
-PERIODO = 'Febrero-Junio 2017'
-
 
 def programas(request):
-    programas = Programa.objects.all()
-    return render(request, 'programas/programas.html', {'programas': programas})
+    ofertas = Oferta.objects.filter(periodo__activo=True)
+    return render(request, 'programas/programas.html', {'ofertas': ofertas})
     
     
 def programa(request, programa_id):
     try:
-        programa = Programa.objects.get(codigo=programa_id)
-        oferta = Oferta.objects.get(programa_id=programa.id, periodo_id=PERIODO)
-    except Exception:
+        oferta = Oferta.objects.get(periodo__activo=True, programa__codigo=programa_id)
+    except Exception as ex:
+        print ex.message
         messages.warning(request, "El programa o la oferta no existen.")
         return redirect('programas')
 
-    return render(request, 'programas/programa.html', {'programa': programa, 'oferta': oferta})
+    return render(request, 'programas/programa.html', {'oferta': oferta})
     
 
 @login_required
@@ -36,7 +35,7 @@ def crear_programa(request):
             programa = form.save()
             return redirect('listar_programas')
 
-    return render(request, 'programas/crear_programa.html', {'form': form, 'user': request.user.empleado, 'editar': False})
+    return render(request, 'programas/crear_programa.html', {'form': form, 'editar': False})
     
     
 @login_required
@@ -55,7 +54,7 @@ def editar_programa(request, programa_id):
             messages.success(request, "Programa modificado correctamente.")
             return redirect('listar_programas')
 
-    return render(request, 'programas/crear_programa.html', {'form': form, 'user': request.user.empleado, 'editar': True})
+    return render(request, 'programas/crear_programa.html', {'form': form, 'editar': True})
     
     
 @login_required
@@ -66,10 +65,10 @@ def ver_programa(request, programa_id):
         messages.warning(request, "El programa no existe.")
         return redirect('listar_programas')
 
-    return render(request, 'programas/ver_programa.html', {'programa': programa, 'user': request.user.empleado})
+    return render(request, 'programas/ver_programa.html', {'programa': programa})
     
     
 @login_required
 def listar_programas(request):
     programas = Programa.objects.all()
-    return render(request, 'programas/listar_programas.html', {'programas': programas, 'user': request.user.empleado})
+    return render(request, 'programas/listar_programas.html', {'programas': programas})

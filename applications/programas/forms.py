@@ -2,6 +2,7 @@
 
 from django import forms
 from django.forms import ModelForm
+from django_select2.forms import Select2MultipleWidget, Select2Widget
 
 from admisionesabc.global_variables import *
 from models import *
@@ -31,11 +32,20 @@ class CrearProgramaForm(ModelForm):
     class Meta:
         model = Programa
         fields = ('codigo', 'nombre', 'snies', 'creditos', 'formacion', 'tipo', 'metodologia', 'titulo', 'descripcion', 'image_url')
+        widgets = {
+            'formacion': Select2Widget,
+            'tipo': Select2Widget,
+            'metodologia': Select2Widget,
+        }
         
         
     def clean_codigo(self):
         codigo = self.cleaned_data['codigo']
-        programa = Programa.objects.get(codigo=codigo)
+        programa = None
+        try:
+            programa = Programa.objects.get(codigo=codigo)
+        except Exception as ex:
+            print ex.message
         if programa:
             raise forms.ValidationError("Ya existe un programa con el codigo proporcionado.")
         return codigo
@@ -62,11 +72,21 @@ class EditarProgramaForm(ModelForm):
     class Meta:
         model = Programa
         fields = ('codigo', 'nombre', 'snies', 'creditos', 'formacion', 'tipo', 'metodologia', 'titulo', 'descripcion', 'image_url')
+        widgets = {
+            'formacion': Select2Widget,
+            'tipo': Select2Widget,
+            'metodologia': Select2Widget,
+        }
         
         
     def clean_codigo(self):
         codigo = self.cleaned_data['codigo']
-        programa = Programa.objects.get(codigo=codigo)
-        if programa != self.instance:
-            raise forms.ValidationError("Ya existe un programa con el codigo proporcionado.")
+        programa = None
+        try:
+            programa = Programa.objects.get(codigo=codigo)
+        except Exception as ex:
+            print ex.message
+        if programa:
+            if programa != self.instance:
+                raise forms.ValidationError("Ya existe un programa con el codigo proporcionado.")
         return codigo

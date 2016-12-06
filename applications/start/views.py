@@ -13,7 +13,8 @@ import applications.admisiones.views as views
 def home(request):
     # print Group.objects.get(name='Aspirante').user_set.all()
     return render(request, 'init/home.html')
-
+    
+    
 def custom_login(request):
     if request.user.is_authenticated():
         return redirect_to_dashboard(request)
@@ -26,12 +27,12 @@ def custom_login(request):
             login(request, user)    # se loguea al usuario
             return redirect_to_dashboard(request)
         
-    return render(request, 'init/login.html', {'form': form})
+    return render(request, 'init/new_login.html', {'form': form})
     
     
 def redirect_to_dashboard(request):
     if request.user.is_authenticated():
-        if hasattr(request.user, 'empleado'):
+        if hasattr(request.user, 'empleado') or request.user.is_staff:
             return redirect('administrador')
         else:
             return redirect('admisiones_dashboard')

@@ -1,6 +1,14 @@
 {% extends "administrador/base_sb.html" %}
 {% load staticfiles %}
 {% block specific-css %}
+<style type="text/css">
+.fa-check-circle {
+    color: #0DD03C;
+}
+.fa-times-circle {
+    color: #FF0000;
+} 
+</style>
 <!-- DataTables CSS -->
 <link href="{% static 'sbadmin/vendor/datatables-plugins/dataTables.bootstrap.css' %}" rel="stylesheet">
 
@@ -30,10 +38,9 @@
                             <tr>
                                 <th>Identificador</th>
                                 <th>Nombre</th>
-                                <th>Puntaje Minimo</th>
-                                <th></th>
-                                <th></th>
-                                <!--<th></th>-->
+                                <th>Puntaje M&iacute;nimo</th>
+                                <th>Activo</th>
+                                <th>Resultados</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -42,11 +49,40 @@
                             <tr class="odd gradeX">
                                 <td class="center">{{ periodo.identificador }}</td>
                                 <td class="center">{{ periodo.nombre }}</td>
-                                <td class="center">{{ periodo.puntaje_minimo }}</a></td>
-                                <td class="center"><a href="{% url 'editar_periodo' periodo.nombre %}">Editar</td>
-                                <!--<td class="center"><a href="{% url 'home' %}">Ver Calendario</td>-->
-                                <td class="center"><a href="{% url 'listar_oferta_periodo' periodo.nombre %}">Ver Oferta</td>
-                                <td class="center"><a href="{% url 'listar_aspirantes_periodo' periodo.nombre %}">Ver Aspirantes</td>
+                                <td class="center">{{ periodo.puntaje_minimo }}</td>
+                                <td class="center">
+                                    {% if periodo.activo %}
+                                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                    {% else %}
+                                        <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                    {% endif %}
+                                </td>
+                                <td class="center">
+                                    {% if periodo.hay_resultados %}
+                                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                    {% else %}
+                                        <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Acciones
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                            <li><a href="{% url 'editar_periodo' periodo.identificador %}">Editar</a></li>
+                                            <li><a href="{% url 'listar_oferta_periodo' periodo.identificador %}">Ver Oferta</a></li>
+                                            <li><a href="{% url 'listar_aspirantes_periodo' periodo.identificador %}">Ver Aspirantes</a></li>
+                                            <li><a href="{% url 'listar_pagos_periodo' periodo.identificador %}">Ver Pagos</a></li>
+                                            {% if not periodo.hay_resultados %}
+                                            <li><a href="{% url 'calcular_admitidos' periodo.identificador %}">Calcular Admitidos</a></li>
+                                            {% else %}
+                                            <li><a href="{% url 'listar_resultados' periodo.identificador %}">Ver Resultados</a></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -33,6 +33,7 @@
                                 {% bootstrap_form_errors form %}
                                 <!--********************************** Periodo **********************************-->
                                 {% bootstrap_field form.identificador layout='horizontal' horizontal_label_class='col-lg-2' horizontal_field_class='form-group col-lg-10' form_group_class='row' %}
+                                
                                 <!--********************************** Periodo **********************************-->
                                 {% bootstrap_field form.nombre layout='horizontal' horizontal_label_class='col-lg-2' horizontal_field_class='form-group col-lg-10' form_group_class='row' %}
                                 
@@ -40,6 +41,12 @@
                                 {% bootstrap_field form.puntaje_minimo layout='horizontal' horizontal_label_class='col-lg-2' horizontal_field_class='form-group col-lg-10' form_group_class='row' %}
 
                                 {% if editar %}
+                                <!--********************************** Puntaje Minimo **********************************-->
+                                {% bootstrap_field form.activo layout='horizontal' horizontal_label_class='col-lg-2' horizontal_field_class='form-group col-lg-10' form_group_class='row' %}
+                                
+                                <!--********************************** Puntaje Minimo **********************************-->
+                                {% bootstrap_field form.hay_resultados layout='horizontal' horizontal_label_class='col-lg-2' horizontal_field_class='form-group col-lg-10' form_group_class='row' %}
+                                
                                 <div class="row buttons">
                                     <div class="col-xs-12 col-sm-12  col-md-4 col-lg-4">
                                         <a type="return" class="btn btn-warning btn-block" href="{% url 'listar_periodos' %}">

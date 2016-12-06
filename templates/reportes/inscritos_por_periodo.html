@@ -1,0 +1,65 @@
+{% extends "administrador/base_sb.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block specific-css %}
+    <link href="{% static 'dist/css/forms.css' %}" rel="stylesheet"></link>
+    <link rel="stylesheet" href="{% static 'sbadmin/vendor/morrisjs/morris.css' %}" rel="stylesheet">
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+{# ================ insert here all the content of the page =============== #}
+<div id="page-wrapper" class="full-screen-w">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Reporte: Inscritos por Periodo</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    {% include 'messages.html' %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div id="inscritos_por_periodo"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+</div>
+
+{% endblock %}
+
+{% block specific-js %}
+<script src="{% static 'vendor/bootbox/bootbox.min.js' %}"></script>
+<script type="text/javascript">
+    itemWithTimer("#message-fade", 10)
+</script>
+<!-- Morris Charts JavaScript -->
+<script src="{% static 'sbadmin/vendor/raphael/raphael.min.js' %}"></script>
+<script src="{% static 'sbadmin/vendor/morrisjs/morris.min.js' %}"></script>
+<script src="{% static 'sbadmin/data/morris-data.js' %}"></script>
+<script>
+    var data = [
+    {% for pareja in parejas %}
+        { periodo: '{{ pareja.0.identificador }}', cantidad: {{ pareja.1 }} }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+    ];
+    
+    Morris.Bar({
+        element: 'inscritos_por_periodo',
+        data: data,
+        xkey: 'periodo',
+        ykeys: ['cantidad'],
+        labels: ['Inscritos'],
+        hideHover: 'auto'
+      });
+</script>
+{% endblock %}

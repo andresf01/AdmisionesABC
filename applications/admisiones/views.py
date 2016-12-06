@@ -6,33 +6,187 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group, Permission
+import urllib
+import urllib2
+import json
+import random
 
+from admisionesabc.global_variables import *
 from forms import *
 from models import *
+from applications.pagos.models import *
 
 # Create your views here.
+    
+    
+def inscripcion_exitosa(request):
+    return render(request, 'success_pages/inscripcion_exitosa.html')
+    
+    
+def inscripciones_cerradas(request):
+    return render(request, 'error_pages/inscipciones_cerradas.html')
+    
+    
+def no_admisiones(request):
+    return render(request, 'error_pages/no_admisiones.html')
+    
+    
+def no_resultados(request):
+    return render(request, 'error_pages/no_resultados.html')
+    
 
-
-def inscripcion(request):
-    form = CrearAspiranteForm()
-    if request.method == 'POST':
-        form = CrearAspiranteForm(request.POST, request=request)
-        if form.is_valid():
-            aspirante = form.save(commit=False)
-            username = form.cleaned_data['documento']
-            password = form.cleaned_data['snp']
-            aspirante.username = username
-            aspirante.set_password(password)
-            aspirante.save()
-            grupo = Group.objects.get(name='Aspirante')
-            grupo.user_set.add(aspirante)
-            return redirect('admisiones')
-        
-    return render(request, 'admisiones/inscripcion.html', {'form':form})
-
+# Prueba para renders
+def prueba(request):
+    return render(request, 'admisiones/lista_admitidos.html')
 
 def info(request):
     return render(request, 'admisiones/info.html')
+    
+    
+def calendario(request):
+    return render(request, 'admisiones/calendario.html')
+    
+    
+def inscripcion(request):
+    periodo = get_periodo_actual()
+    if periodo:
+        if not periodo.hay_resultados:
+            form = CrearAspiranteForm()
+            if request.method == 'POST':
+                form = CrearAspiranteForm(request.POST, request=request)
+                if form.is_valid():
+                    aspirante = form.save(commit=False)
+                    username = form.cleaned_data['documento']
+                    password = form.cleaned_data['snp']
+                    aspirante.username = username
+                    aspirante.set_password(password)
+                    aspirante.save()
+                    pago = Pago()
+                    pago.aspirante = aspirante
+                    pago.save()
+                    grupo = Group.objects.get(name='Aspirante')
+                    grupo.user_set.add(aspirante)
+                    return inscripcion_exitosa(request)
+        else:
+            return inscripciones_cerradas(request)
+        
+    return render(request, 'admisiones/inscripcion.html', {'form':form})
+    
+    
+def admitidos(request):
+    parejas_oferta_admitidos = []
+    periodo = None
+    try:
+        periodo = Periodo.objects.get(activo=True)
+    except Exception as ex:
+        print ex.message
+        return no_admisiones(request)
+    if periodo:
+        if periodo.hay_resultados:
+            for oferta in periodo.oferta_set.all():
+                admitidos = oferta.aspirante_set.all().order_by('-ponderado')
+                pareja = (oferta, admitidos)
+                parejas_oferta_admitidos.append(pareja)
+        else:
+            return no_resultados(request)
+    
+    return render(request, 'admisiones/admitidos.html', {'parejas_oferta_admitidos': parejas_oferta_admitidos})
+    
+    
+@login_required
+def listar_resultados(request, periodo_id):
+    resultados = []
+    periodo = None
+    try:
+        periodo = Periodo.objects.get(identificador=periodo_id)
+        if periodo.hay_resultados:
+            resultados = Aspirante.objects.filter(programa__periodo__id=periodo.id).order_by('-ponderado', 'programa')
+            print resultados
+        return render(request, 'admisiones/listar_resultados.html', {'resultados': resultados, 'nombre_periodo': periodo.nombre})
+    except Exception as ex:
+        print ex.message
+        return redirect('listar_periodos')
+    
+    
+@login_required
+def calcular_admitidos(request, periodo_id):
+    nombre_periodo = 'Ninguno'
+    periodo = None
+    try:
+        periodo = Periodo.objects.get(identificador=periodo_id)
+        nombre_periodo = periodo.nombre
+        ofertas = periodo.oferta_set.all()
+        for oferta in ofertas:
+            aspirantes = []
+            aspirantes += oferta.aspirante_set.all()
+            procesar_aspirantes_oferta(oferta, aspirantes)
+        periodo.hay_resultados = True
+        periodo.save()
+        return redirect('listar_resultados', periodo_id)
+    except Exception as ex:
+        print ex.message
+        return redirect('listar_periodos')
+        
+    
+def procesar_aspirantes_oferta(oferta, aspirantes):
+    for aspirante in aspirantes:
+        if aspirante.pago.pagado == True:
+            decoded_json = get_resultado(aspirante)
+            if len(decoded_json) == 1:
+                resultado = decoded_json[0]
+                resultado_puntaje_global = resultado['lectura_critica'] + resultado['matematicas'] + resultado['sociales'] + resultado['naturales'] + resultado['ingles']
+                if resultado_puntaje_global >= oferta.periodo.puntaje_minimo:
+                    if aspirante.puntaje_global == resultado_puntaje_global:
+                        ponderado = aspirante.programa.peso_lectura * resultado['lectura_critica']
+                        ponderado += aspirante.programa.peso_matematicas * resultado['matematicas']
+                        ponderado += aspirante.programa.peso_sociales * resultado['sociales']
+                        ponderado += aspirante.programa.peso_naturales * resultado['naturales']
+                        ponderado += aspirante.programa.peso_ingles * resultado['ingles']
+                        ponderado += aspirante.programa.peso_prueba * random.randint(0, 100)
+                        ponderado /= 100.0
+                        aspirante.ponderado = ponderado
+                        aspirante.save()
+                    else:
+                        aspirante.admitido = False
+                        aspirante.nota_admision = 'No coincide con el registro del ICFES'
+                        aspirante.save()
+                else:
+                    aspirante.admitido = False
+                    aspirante.nota_admision = 'No cumple con el puntaje mínimo de inscripción'
+                    aspirante.save()
+            else:
+                aspirante.admitido = False
+                aspirante.nota_admision = 'No figura en la base datos del ICFES'
+                aspirante.save()
+        else:
+            aspirante.admitido = False
+            aspirante.nota_admision = 'No realizó el pago de los derechos de inscripción'
+            aspirante.save()
+            
+    aspirantes.sort(key=lambda x: x.ponderado, reverse=True)
+    cupo = oferta.cupo
+    for aspirante in aspirantes:
+        if cupo > 0 and aspirante.ponderado > 0:
+            aspirante.admitido = True
+            aspirante.nota_admision = 'Admitido primer llamado'
+            aspirante.save()
+            cupo -= 1
+    
+
+def get_resultado(aspirante):
+    url = 'https://morning-brushlands-79611.herokuapp.com/v1/resultados/'
+    values = {
+        'format': 'json',
+        'codigo': aspirante.snp,
+    }
+    
+    data = urllib.urlencode(values)
+    full_url = url + '?' + data
+    response = urllib2.urlopen(full_url)
+    the_page = response.read()
+    resultado = json.loads(the_page)
+    return resultado
+
 
 @login_required
 def editar_aspirante(request, aspirante_id):
@@ -43,7 +197,6 @@ def editar_aspirante(request, aspirante_id):
     form = EditarAspiranteForm(instance=aspirante, initial=aspirante.__dict__)
     data = {
         'form': form,
-        'user': request.user.empleado,
     }
     if request.method == 'POST':
         form = EditarAspiranteForm(request.POST, instance=aspirante, initial=aspirante.__dict__)
@@ -68,7 +221,8 @@ def editar_aspirante(request, aspirante_id):
 def dashboard(request):
     try:
         aspirante = Aspirante.objects.get(documento=request.user.aspirante.documento)
-    except:
+    except Exception as ex:
+        print ex.message
         messages.warning(request, "El aspirante no existe.")
         return redirect('home')
     return render(request, 'admisiones/dashboard.html', {'aspirante': aspirante})
@@ -85,13 +239,13 @@ def crear_periodo(request):
             return render(request, 'admisiones/crear_periodo.html', {'form': CrearPeriodoForm(), 'user': request.user.empleado, 'editar':False})
         messages.error(request, "Error al registrar el periodo.")
         
-    return render(request, 'admisiones/crear_periodo.html', {'form': form, 'user': request.user.empleado, 'editar': False})
+    return render(request, 'admisiones/crear_periodo.html', {'form': form, 'editar': False})
     
     
 @login_required
 def editar_periodo(request, periodo_id):
     try:
-        periodo = Periodo.objects.get(nombre=periodo_id)
+        periodo = Periodo.objects.get(identificador=periodo_id)
     except Exception:
         return redirect('listar_periodos')
 
@@ -105,7 +259,7 @@ def editar_periodo(request, periodo_id):
             return redirect('listar_periodos')
         messages.error(request, "Error al modificar el periodo.")
 
-    return render(request, 'admisiones/crear_periodo.html', {'form': form, 'user': request.user.empleado, 'editar': True})
+    return render(request, 'admisiones/crear_periodo.html', {'form': form, 'editar': True})
     
 
 @login_required
@@ -135,11 +289,10 @@ def listar_aspirantes(request):
 def listar_aspirantes_periodo(request, periodo_id):
     aspirantes = []
     try:
-        periodo = Periodo.objects.get(nombre=periodo_id)
-        oferta = periodo.oferta_set.all()
-        for o in oferta:
-            if o.periodo.nombre == periodo.nombre:
-                aspirantes += o.aspirante_set.all()
+        periodo = Periodo.objects.get(identificador=periodo_id)
+        ofertas = periodo.oferta_set.all()
+        for oferta in ofertas:
+            aspirantes += oferta.aspirante_set.all()
     except Exception as ex:
         print ex.message
         return redirect('listar_periodos')
@@ -155,10 +308,10 @@ def crear_oferta(request):
         if form.is_valid():
             oferta = form.save()
             messages.success(request, "La oferta fue registrada con exito.")
-            return render(request, 'admisiones/crear_oferta.html', {'form': CrearOfertaForm(), 'user': request.user.empleado, 'editar':False})
+            return render(request, 'admisiones/crear_oferta.html', {'form': CrearOfertaForm(), 'editar':False})
         messages.error(request, "Error al registrar la oferta.")
         
-    return render(request, 'admisiones/crear_oferta.html', {'form': form, 'user': request.user.empleado, 'editar': False})
+    return render(request, 'admisiones/crear_oferta.html', {'form': form, 'editar': False})
     
     
 @login_required
@@ -178,15 +331,24 @@ def editar_oferta(request, oferta_id):
             return redirect('listar_oferta_periodo', periodo_id=oferta.periodo.nombre)
         messages.error(request, "Error al modificar la oferta.")
 
-    return render(request, 'admisiones/crear_oferta.html', {'form': form, 'user': request.user.empleado, 'editar': True})
+    return render(request, 'admisiones/crear_oferta.html', {'form': form, 'editar': True})
     
 
 @login_required
 def listar_oferta_periodo(request, periodo_id):
     try:
-        periodo = Periodo.objects.get(nombre=periodo_id)
+        periodo = Periodo.objects.get(identificador=periodo_id)
         oferta = periodo.oferta_set.all()
     except Exception as ex:
         print ex.message
         return redirect('listar_periodos')
     return render(request, 'admisiones/listar_oferta.html', {'oferta': oferta, 'periodo': periodo_id})
+    
+   
+def get_periodo_actual():
+    periodo = None
+    try:
+        periodo = Periodo.objects.get(activo=True)
+    except Exception as ex:
+        print ex.message
+    return periodo

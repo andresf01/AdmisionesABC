@@ -3,4 +3,8 @@ from models import *
 
 # Register your models here.
 
-admin.site.register(Empleado)
+class EmpleadoAdmin(admin.ModelAdmin):
+    list_display = ('documento', 'tipo_documento', 'nombre', 'apellido', 'cargo')
+    
+    
+admin.site.register(Empleado, EmpleadoAdmin)

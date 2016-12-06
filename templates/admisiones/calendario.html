@@ -1,0 +1,251 @@
+{# =================== Importa el archivo base html =================== #}
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block specific-css %}
+<style type="text/css">
+    #calendar {
+		max-width: 1100px;
+		margin: 0 auto;
+	}
+</style>
+<link href="{% static 'bootstrap-year-calendar/bootstrap-year-calendar.css' %}" rel='stylesheet'></script>
+<link href="{% static 'bootstrap-year-calendar/bootstrap-year-calendar.min.css' %}" rel='stylesheet'></script>
+{% endblock %}
+
+{% block content %}
+
+<!-- Page breadcrumb -->
+ <section id="mu-page-breadcrumb">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-12">
+         <div class="mu-page-breadcrumb-area">
+           <h2>Calendario de Admisiones</h2>
+           <ol class="breadcrumb">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'admisiones' %}">Admisiones</a></li>
+            <li class="active">Calendario</li>
+          </ol>
+         </div>
+       </div>
+     </div>
+   </div>
+ </section>
+ <!-- End breadcrumb -->
+ <section id="mu-course-content">
+    <div class="container">
+        <div id='calendar'></div>
+        <div class="news">
+        	 <div class="container">
+        		 <h3>Fechas Importantes</h3>
+        		  <div class="event-grids">			
+        		     <div class="col-md-4 event-grid">
+        				 <div class="date">
+        				     <h4>03</h4>
+        					 <span>10/2016</span>
+        				 </div>				 
+        			     <div class="event-info">
+        					  <b>Inscripciones via Web</b>
+        						<p>Realiza tu inscripción via web.</p>					
+        				 </div>
+        				 <div class="clearfix"></div>				 			 
+        			 </div>
+        			 <div class="col-md-4 event-grid">
+        				 <div class="date">
+        				     <h4>03</h4>
+        					 <span>10/2016</span>
+        				 </div>				 
+        			     <div class="event-info">
+        					  <b>Pago Inscripción</b>
+        						<p>Realiza el pago de los derechos de inscripción iniciando sesión en nuestra plataforma.</p>					
+        				 </div>
+        				 <div class="clearfix"></div>				 			 
+        			 </div>
+        			 <div class="col-md-4 event-grid">
+        				 <div class="date">
+        				     <h4>13</h4>
+        					 <span>02/2017</span>
+        				 </div>				 
+        			     <div class="event-info">
+        					  <b>Inicio de Semestre</b>
+        						<p>Inicio del periodo Febrero-Junio 2017.</p>					
+        				 </div>
+        				 <div class="clearfix"></div>				 			 
+        			 </div>
+        			 <div class="clearfix"></div>	
+        		 </div>
+        	 </div>
+        </div>
+    </div>
+ </section>
+
+
+{% endblock content %}
+
+{% block customjs %}
+<script src="{% static 'bootstrap-year-calendar/bootstrap-year-calendar.js' %}"></script>
+<script src="{% static 'bootstrap-year-calendar/bootstrap-year-calendar.min.js' %}"></script>
+<script src="{% static 'bootstrap-year-calendar/bootstrap-year-calendar.es.js' %}"></script>
+<script src="{% static 'bootstrap-year-calendar/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'bootstrap-year-calendar/bootstrap-popover.js' %}"></script>
+<script type="text/javascript">
+
+function editEvent(event) {
+    $('#event-modal input[name="event-index"]').val(event ? event.id : '');
+    $('#event-modal input[name="event-name"]').val(event ? event.name : '');
+    $('#event-modal input[name="event-location"]').val(event ? event.location : '');
+    $('#event-modal input[name="event-start-date"]').datepicker('update', event ? event.startDate : '');
+    $('#event-modal input[name="event-end-date"]').datepicker('update', event ? event.endDate : '');
+    $('#event-modal').modal();
+}
+
+function deleteEvent(event) {
+    var dataSource = $('#calendar').data('calendar').getDataSource();
+
+    for(var i in dataSource) {
+        if(dataSource[i].id == event.id) {
+            dataSource.splice(i, 1);
+            break;
+        }
+    }
+    
+    $('#calendar').data('calendar').setDataSource(dataSource);
+}
+
+function saveEvent() {
+    var event = {
+        id: $('#event-modal input[name="event-index"]').val(),
+        name: $('#event-modal input[name="event-name"]').val(),
+        location: $('#event-modal input[name="event-location"]').val(),
+        startDate: $('#event-modal input[name="event-start-date"]').datepicker('getDate'),
+        endDate: $('#event-modal input[name="event-end-date"]').datepicker('getDate')
+    }
+    
+    var dataSource = $('#calendar').data('calendar').getDataSource();
+
+    if(event.id) {
+        for(var i in dataSource) {
+            if(dataSource[i].id == event.id) {
+                dataSource[i].name = event.name;
+                dataSource[i].location = event.location;
+                dataSource[i].startDate = event.startDate;
+                dataSource[i].endDate = event.endDate;
+            }
+        }
+    }
+    else
+    {
+        var newId = 0;
+        for(var i in dataSource) {
+            if(dataSource[i].id > newId) {
+                newId = dataSource[i].id;
+            }
+        }
+        
+        newId++;
+        event.id = newId;
+    
+        dataSource.push(event);
+    }
+    
+    $('#calendar').data('calendar').setDataSource(dataSource);
+    $('#event-modal').modal('hide');
+}
+
+$(function() {
+    var currentYear = new Date().getFullYear();
+
+    $('#calendar').calendar({
+        enableContextMenu: true,
+        enableRangeSelection: true,
+        contextMenuItems:[
+            {
+                text: 'Update',
+                click: editEvent
+            },
+            {
+                text: 'Delete',
+                click: deleteEvent
+            }
+        ],
+        selectRange: function(e) {
+            editEvent({ startDate: e.startDate, endDate: e.endDate });
+        },
+        mouseOnDay: function(e) {
+            if(e.events.length > 0) {
+                var content = '';
+                
+                for(var i in e.events) {
+                    content += '<div class="event-tooltip-content">'
+                                    + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+                                    + '<div class="event-location">' + e.events[i].location + '</div>'
+                                + '</div>';
+                }
+            
+                $(e.element).popover({
+                    trigger: 'manual',
+                    container: 'body',
+                    html:true,
+                    content: content
+                });
+                
+                $(e.element).popover('show');
+            }
+        },
+        mouseOutDay: function(e) {
+            if(e.events.length > 0) {
+                $(e.element).popover('hide');
+            }
+        },
+        dayContextMenu: function(e) {
+            $(e.element).popover('hide');
+        },
+        dataSource: [
+            {
+                id: 0,
+                name: 'Inscripciones via Web',
+                location: "Realice su inscripción via web",
+                startDate: new Date(currentYear, 9, 3),
+                endDate: new Date(currentYear, 9, 26)
+            },
+            {
+                id: 1,
+                name: 'Pago Incripción',
+                location: 'Realice el pago de los derechos de inscripción iniciando sesión en nuestra plataforma',
+                startDate: new Date(currentYear, 9, 3),
+                endDate: new Date(currentYear, 9, 27)
+            },
+            {
+                id: 2,
+                name: 'Pruebas Adicionales de Admisión',
+                location: 'Realización de las pruebas adicionales de aquellos programas que lo requieren',
+                startDate: new Date(currentYear, 10, 7),
+                endDate: new Date(currentYear, 10, 11)
+            },
+            {
+                id: 3,
+                name: 'Publicación de Resultados',
+                location: 'Publicación de los resultados de admision en la pagina web de la Universidad ABC',
+                startDate: new Date(currentYear, 10, 25),
+                endDate: new Date(currentYear, 10, 25)
+            },
+            {
+                id: 4,
+                name: 'Inicio de Semestre',
+                location: 'Inicio del periodo Febrero-Junio 2017',
+                startDate: new Date(2017, 1, 13),
+                endDate: new Date(2017, 1, 13)
+            }
+        ]
+    });
+    
+    $('#save-event').click(function() {
+        saveEvent();
+    });
+    
+    $('#calendar').data('calendar').setLanguage('es');
+});
+</script>
+{% endblock %}

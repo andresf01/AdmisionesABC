@@ -11,9 +11,9 @@ from applications.empleados.models import *
 
 @login_required
 def dashboard(request):
-    try:
-        empleado = Empleado.objects.get(documento=request.user.empleado.documento)
-    except Exception:
-        messages.warning(request, "El empleado no existe.")
-        return redirect('home')
-    return render(request, 'administrador/dashboard.html', {'empleado': empleado})
+    # try:
+    #     empleado = Empleado.objects.get(documento=request.user.empleado.documento)
+    # except Exception:
+    #     messages.warning(request, "El empleado no existe.")
+    #     return redirect('home')
+    return render(request, 'administrador/dashboard.html')

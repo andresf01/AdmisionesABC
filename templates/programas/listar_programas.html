@@ -35,7 +35,6 @@
                                 <th>Formacion</th>
                                 <th>Tipo</th>
                                 <th></th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,7 +46,6 @@
                                 <td class="center">{{ programa.creditos }}</td>
                                 <td class="center">{{ programa.formacion }}</td>
                                 <td class="center">{{ programa.tipo }}</td>
-                                <td class="center"><a href="{% url 'ver_programa' programa.codigo %}">Ver</td>
                                 <td class="center"><a href="{% url 'editar_programa' programa.codigo %}">Editar</td>
                             </tr>
                             {% endfor %}
