@@ -13,11 +13,22 @@ from forms import *
 
 
 def realizar_pago(request, pago_id):
-    values = {
-        'order_id': pago_id,
-        'amount': 40000,
-    }
-    return custom_redirect('https://secure-payments-online-camilo1090.c9users.io/payments/pay', values)
+    pago = None
+    try:
+        pago = Pago.objects.get(id=pago_id)
+    except Exception as ex:
+        ex.message
+    if pago:
+        if not pago.pagado:
+            values = {
+                'order_id': pago_id,
+                'amount': 40000,
+            }
+            return custom_redirect('https://secure-payments-online-camilo1090.c9users.io/payments/pay', values)
+        else:
+            return redirect('pago_pagado')
+            
+    return redirect('error_inesperado')
     
 
 def custom_redirect(url, values):

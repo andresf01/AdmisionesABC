@@ -7,11 +7,13 @@ from django.contrib.auth.models import User, Group, Permission
 
 from forms import *
 import applications.admisiones.views as views
-
+# import applications.programas.models as allprograms
 # Create your views here.
 
 def home(request):
     # print Group.objects.get(name='Aspirante').user_set.all()
+    # programas = allprograms.objects.all()
+    # return render(request, 'init/home.html', {'programas': programas})
     return render(request, 'init/home.html')
     
     

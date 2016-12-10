@@ -21,6 +21,7 @@ class CrearEmpleadoForm(UserCreationForm):
         # Campos de usario de django
         self.fields['username'].widget.attrs.update({'placeholder': 'Escriba un nombre de usuario', 'required':'required'})
         self.fields['username'].label = 'Usuario'
+        self.fields['username'].help_text = 'Requerido. 30 caracteres o menos. Solamente letras, números y @/./+/-/_'
         self.fields['password1'].widget.attrs.update({'placeholder': 'Escriba una contraseña', 'required':'required'})
         self.fields['password1'].label = 'Contraseña'
         self.fields['password2'].widget.attrs.update({'placeholder': 'Confirme la contraseña', 'required':'required'})
@@ -71,6 +72,7 @@ class EditarEmpleadoForm(UserChangeForm):
         # Campos de usario de django
         self.fields['username'].widget.attrs.update({'placeholder': 'Escriba un nombre de usuario', 'required':'required'})
         self.fields['username'].label = 'Usuario'
+        self.fields['username'].help_text = 'Requerido. 30 caracteres o menos. Solamente letras, digitos y @/./+/-/_'
         self.fields['email'].widget.attrs.update({'placeholder': 'Escriba su correo electronico', 'label':'Correo Electronico', 'required':'required'})
         self.fields['email'].label = 'Correo Electronico'
         
@@ -123,5 +125,7 @@ class SetPasswordEmpleadoForm(SetPasswordForm):
         # Campos de formulario de django
         self.fields['new_password1'].widget.attrs.update({'placeholder': 'Escriba una contraseña', 'required':'required'})
         self.fields['new_password1'].label = 'Contraseña'
+        self.fields['new_password1'].help_text = "<ul><li>Tu contraseña no puede ser similar a otra información personal.</li><li>Tu contraseña debe contener al menos 8 caracteres.</li><li>Tu contraseña no puede ser común.</li><li>Tu contraseña no puede ser sólo numérica.</li></ul>"
         self.fields['new_password2'].widget.attrs.update({'placeholder': 'Confirme la contraseña', 'required':'required'})
         self.fields['new_password2'].label = 'Confirmar Contraseña'
+        self.fields['new_password2'].help_text = 'Ingrese la misma contraseña de antes, para verificacion.'

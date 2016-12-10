@@ -40,7 +40,7 @@ http://www.bootstrapzen.com/item/135/simple-login-form-logo/
 	}
 
 body {
-	background: url(http://i.imgur.com/GHr12sH.jpg) no-repeat center center fixed;
+	background: url({% static 'assets/img/fondo.jpg' %}) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -81,6 +81,10 @@ form[role=login] {
 	.form-links a {
 		color: #fff;
 	}
+	
+	.logo {
+		text-align: center;
+	}
 </style>
 {% endblock %}
 
@@ -91,7 +95,8 @@ form[role=login] {
     <div class="col-md-4">
       <section class="login-form">
         <form method="post" action="#" role="login">
-          <img src="http://i.imgur.com/RcmcLv4.png" class="img-responsive" alt="" />
+          <!--<img src="http://i.imgur.com/RcmcLv4.png" class="img-responsive" alt="" />-->
+          <div class="logo-container"><i class="fa fa-university fa-5x"></i></div>
           {% csrf_token %}
           {% bootstrap_form_errors form %}
           {#{% bootstrap_form form %}#}

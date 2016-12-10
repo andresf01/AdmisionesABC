@@ -16,7 +16,7 @@
             {% if editar%}
             <h1 class="page-header">Editar Oferta del Periodo: {{ form.instance.periodo }}</h1>
             {% else %}
-            <h1 class="page-header">Registrar Oferta en el Periodo: {{ form.instance.periodo }}</h1>
+            <h1 class="page-header">Registrar Oferta</h1>
             {% endif %}
         </div>
         <!-- /.col-lg-12 -->
@@ -34,8 +34,18 @@
                             <fieldset>
                                 {% bootstrap_form_errors form %}
                                 {% if editar %}
-                                <p>Periodo: {{ form.instance.periodo }}</p>
-                                <p>Programa: {{ form.instance.programa }}</p>
+                                <div class='row'>
+                                    <div class='col-lg-2'>
+                                        {% bootstrap_label content='Periodo:' label_for='periodo' label_class='pull-right' %}
+                                    </div>
+                                <p id='periodo' class='form-group col-lg-10'>{{ form.instance.periodo }}</p>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-lg-2'>
+                                        {% bootstrap_label content='Programa:' label_for='programa' label_class='pull-right' %}
+                                    </div>
+                                <p id='programa' class='form-group col-lg-10'>{{ form.instance.programa }}</p>
+                                </div>
                                 {% else %}
                                 <!--********************************** Periodo **********************************-->
                                 {% bootstrap_field form.periodo layout='horizontal' horizontal_label_class='col-lg-2' horizontal_field_class='form-group col-lg-10' form_group_class='row' %}

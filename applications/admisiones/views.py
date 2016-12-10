@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group, Permission
+from django_ajax.decorators import ajax
 import urllib
 import urllib2
 import json
@@ -93,6 +94,52 @@ def admitidos(request):
     return render(request, 'admisiones/admitidos.html', {'parejas_oferta_admitidos': parejas_oferta_admitidos})
     
     
+def resultados_oferta(request):
+    pareja = None
+    form = ResultadosForm()
+    if request.method == 'POST':
+        form = ResultadosForm(request.POST)
+        if form.is_valid():
+            oferta = form.cleaned_data['programa']
+            if oferta:
+                if oferta.periodo.hay_resultados:
+                    resultados = oferta.aspirante_set.all().order_by('-ponderado')
+                    pareja = {}
+                    pareja['oferta'] = oferta
+                    pareja['resultados'] = resultados
+                else:
+                    return no_resultados(request)
+    
+    return render(request, 'admisiones/admitidos.html', {'form': form, 'pareja': pareja, 'ajax':True})
+    
+
+@ajax
+def resultados_oferta_ajax(request):
+    response = []
+    if request.method == 'GET':
+        oferta_id = request.GET['oferta_id']
+        try:
+            oferta = Oferta.objects.get(id=oferta_id)
+        except Exception as ex:
+            print ex.message
+        if oferta:
+            if oferta.periodo.hay_resultados:
+                resultados = oferta.aspirante_set.all().order_by('-ponderado')
+                for aspirante in resultados:
+                    obj = {
+                        'documento': aspirante.documento,
+                        'nombre': aspirante.nombre,
+                        'apellido': aspirante.apellido,
+                        'ponderado': aspirante.ponderado,
+                        'nota_admision': aspirante.nota_admision
+                    }
+                    response.append(obj)
+            else:
+                return no_resultados(request)
+    
+    return response
+    
+    
 @login_required
 def listar_resultados(request, periodo_id):
     resultados = []
@@ -168,7 +215,7 @@ def procesar_aspirantes_oferta(oferta, aspirantes):
     for aspirante in aspirantes:
         if cupo > 0 and aspirante.ponderado > 0:
             aspirante.admitido = True
-            aspirante.nota_admision = 'Admitido primer llamado'
+            aspirante.nota_admision = 'Admitido primer semestre'
             aspirante.save()
             cupo -= 1
     
@@ -236,7 +283,7 @@ def crear_periodo(request):
         if form.is_valid():
             periodo = form.save()
             messages.success(request, "El periodo fue registrado con exito.")
-            return render(request, 'admisiones/crear_periodo.html', {'form': CrearPeriodoForm(), 'user': request.user.empleado, 'editar':False})
+            return render(request, 'admisiones/crear_periodo.html', {'form': CrearPeriodoForm(), 'editar':False})
         messages.error(request, "Error al registrar el periodo.")
         
     return render(request, 'admisiones/crear_periodo.html', {'form': form, 'editar': False})

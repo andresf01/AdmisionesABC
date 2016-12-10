@@ -21,3 +21,14 @@ class InscritosPorOfertaForm(forms.Form):
         # Campos de el aspirante
         self.fields['periodo'].widget.attrs.update({'placeholder': 'Seleccione el Periodo', 'required':'required'})
         self.fields['periodo'].label = 'Periodo'
+        
+        
+class InscritosPorFechaForm(forms.Form):
+    periodo = forms.ModelChoiceField(queryset=Periodo.objects.all(), widget=Select2Widget)
+    
+    def __init__(self, *args, **kwargs):
+        super(InscritosPorFechaForm, self).__init__(*args, **kwargs)
+        
+        # Campos de el aspirante
+        self.fields['periodo'].widget.attrs.update({'placeholder': 'Seleccione el Periodo', 'required':'required'})
+        self.fields['periodo'].label = 'Periodo'

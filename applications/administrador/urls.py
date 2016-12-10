@@ -46,4 +46,5 @@ urlpatterns = [
     
     url(r'^reportes/inscritos-por-periodo/', reportes_views.inscritos_por_periodo, name='inscritos_por_periodo'),
     url(r'^reportes/inscritos-por-oferta/', reportes_views.inscritos_por_oferta, name='inscritos_por_oferta'),
+    url(r'^reportes/inscritos-por-fecha-por-periodo/', reportes_views.inscritos_por_fecha_por_periodo, name='inscritos_por_fecha_por_periodo'),
 ]

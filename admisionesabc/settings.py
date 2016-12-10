@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'applications.admisiones',
     'applications.pagos',
     'django_select2',
+    'django_ajax',
 ]
 
 MIDDLEWARE_CLASSES = [

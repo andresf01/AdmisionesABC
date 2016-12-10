@@ -15,6 +15,13 @@ from models import *
 # PERIODO = 1
 
 
+class ResultadosForm(forms.Form):
+    programa = forms.ModelChoiceField(queryset=Oferta.objects.filter(periodo__activo=True), widget=Select2Widget)
+    
+    def __init__(self, *args, **kwargs):
+        super(ResultadosForm, self).__init__(*args, **kwargs)
+
+
 class CrearAspiranteForm(ModelForm):
     required_css_class = 'required'
     # confirm_password = forms.CharField(label='Confirmar Contraseña', widget=forms.PasswordInput(attrs={'placeholder':'Confirme su contraseña', 'required':'required'}))

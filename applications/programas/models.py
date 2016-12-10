@@ -32,7 +32,7 @@ class Programa(models.Model):
     tipo = models.CharField(max_length=64, choices=TIPO_CHOICES)
     metodologia = models.CharField(max_length=64, choices=METODOLOGIA_CHOICES, verbose_name='Metodología')
     titulo = models.CharField(max_length=64, verbose_name='Título')
-    descripcion = models.CharField(max_length=512, verbose_name='Descripción')
+    descripcion = models.CharField(max_length=1024, verbose_name='Descripción')
     image_url = models.CharField(max_length=256, verbose_name='URL Imagen')
     
     def __unicode__(self):

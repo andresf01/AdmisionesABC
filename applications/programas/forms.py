@@ -25,7 +25,7 @@ class CrearProgramaForm(ModelForm):
         self.fields['tipo'].widget.attrs.update({'placeholder': 'Seleccione el tipo del programa academico', 'required': 'required'})
         self.fields['metodologia'].widget.attrs.update({'placeholder': 'Seleccione la metodologia del programa academico', 'required': 'required'})
         self.fields['titulo'].widget.attrs.update({'placeholder': 'Escriba el titulo que otorga el programa academico', 'required': 'required'})
-        self.fields['descripcion'].widget = forms.Textarea(attrs={'placeholder': 'Escriba una descripcion del programa academico', 'required': 'required'})
+        self.fields['descripcion'].widget = forms.Textarea(attrs={'placeholder': 'Escriba una descripcion del programa academico', 'required': 'required', 'maxlength': '1024'})
         self.fields['image_url'].widget.attrs.update({'placeholder': 'Ingrese la url interna de la imagen del programa academico', 'required': 'required'})
 
 
@@ -65,7 +65,7 @@ class EditarProgramaForm(ModelForm):
         self.fields['tipo'].widget.attrs.update({'placeholder': 'Seleccione el tipo del programa academico', 'required': 'required'})
         self.fields['metodologia'].widget.attrs.update({'placeholder': 'Seleccione la metodologia del programa academico', 'required': 'required'})
         self.fields['titulo'].widget.attrs.update({'placeholder': 'Escriba el titulo que otorga el programa academico', 'required': 'required'})
-        self.fields['descripcion'].widget = forms.Textarea(attrs={'placeholder': 'Escriba una descripcion del programa academico', 'required': 'required'})
+        self.fields['descripcion'].widget = forms.Textarea(attrs={'placeholder': 'Escriba una descripcion del programa academico', 'required': 'required', 'maxlength': '1024'})
         self.fields['image_url'].widget.attrs.update({'placeholder': 'Ingrese la url interna de la imagen del programa academico', 'required': 'required'})
 
 

@@ -67,7 +67,7 @@
                       </figure>
                       <div class="mu-latest-course-single-content">
                         <h4><a href="{% url 'programa' oferta.programa.codigo %}">Descripci&oacute;n del Programa</a></h4>
-                        <p>{{ oferta.programa.descripcion|truncatewords:10 }}</p>
+                        <p>{{ oferta.programa.descripcion|truncatewords:20 }}</p>
                         <div class="mu-latest-course-single-contbottom">
                           <a class="mu-course-details" href="{% url 'programa' oferta.programa.codigo %}">Detalles</a>
                           <!--<span class="mu-course-price" href="#">$165.00</span>-->
