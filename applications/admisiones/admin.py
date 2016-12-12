@@ -14,7 +14,7 @@ class OfertaAdmin(admin.ModelAdmin):
     
     
 class AspiranteAdmin(admin.ModelAdmin):
-    list_display = ('documento', 'tipo_documento', 'nombre', 'apellido', 'snp', 'puntaje_global')
+    list_display = ('id', 'date_joined', 'documento', 'tipo_documento', 'nombre', 'apellido', 'snp', 'puntaje_global')
     
 
 admin.site.register(Periodo, PeriodoAdmin)

@@ -63,7 +63,7 @@ def listar_pagos_periodo(request, periodo_id):
     try:
         periodo = Periodo.objects.get(identificador=periodo_id)
         pagos = Pago.objects.filter(aspirante__programa__periodo__id=periodo.id)
-        return render(request, 'pagos/listar_pagos.html', {'pagos': pagos, 'periodo': periodo.nombre})
+        return render(request, 'pagos/listar_pagos.html', {'pagos': pagos, 'nombre_periodo': periodo.nombre})
     except Exception as ex:
         print ex.message
         return redirect('listar_periodos')
@@ -83,7 +83,7 @@ def editar_pago(request, pago_id):
         if form.is_valid():
             pago = form.save()
             messages.success(request, "Pago modificado correctamente.")
-            return redirect('listar_pagos')
+            return redirect('listar_pagos_periodo', pago.aspirante.programa.periodo.identificador)
         messages.error(request, "Error al modificar el pago.")
 
     return render(request, 'pagos/editar_pago.html', {'form': form})

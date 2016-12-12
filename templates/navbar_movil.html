@@ -1,0 +1,25 @@
+{% block specific-css %}
+<style type="text/css">
+  .navbar-brand {
+      margin-bottom: 10px;
+    }
+  .navbar-brand span {
+    font-size: 20px;
+  }
+</style>
+{% endblock %}
+<!-- Start menu -->
+<section id="mu-menu">
+<nav class="navbar navbar-default" role="navigation">  
+  <div class="container">
+    <div class="navbar-header">
+      <!-- LOGO -->
+      <!-- TEXT BASED LOGO -->
+      <a class="navbar-brand" href="{% url 'home' %}"><i class="fa fa-university"></i><span>Universidad ABC</span></a>
+      <!-- IMG BASED LOGO  -->
+      <!-- <a class="navbar-brand" href="index.html"><img src="assets/img/logo.png" alt="logo"></a> -->
+    </div>
+  </div>     
+</nav>
+</section>
+<!-- End menu -->

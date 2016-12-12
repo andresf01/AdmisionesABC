@@ -40,11 +40,12 @@ urlpatterns = [
     url(r'^periodos/calcular-admitidos/(?P<periodo_id>.+)/', admisiones_views.calcular_admitidos, name='calcular_admitidos'),
     url(r'^periodos/listar-resultados/(?P<periodo_id>.+)/', admisiones_views.listar_resultados, name='listar_resultados'),
     
-    url(r'^pagos/listar-pagos/', pagos_views.listar_pagos, name='listar_pagos'),
     url(r'^pagos/listar-pagos/(?P<periodo_id>.+)/', pagos_views.listar_pagos_periodo, name='listar_pagos_periodo'),
+    url(r'^pagos/listar-pagos/', pagos_views.listar_pagos, name='listar_pagos'),
     url(r'^pagos/editar-pago/(?P<pago_id>.+)/', pagos_views.editar_pago, name='editar_pago'),
     
     url(r'^reportes/inscritos-por-periodo/', reportes_views.inscritos_por_periodo, name='inscritos_por_periodo'),
     url(r'^reportes/inscritos-por-oferta/', reportes_views.inscritos_por_oferta, name='inscritos_por_oferta'),
     url(r'^reportes/inscritos-por-fecha-por-periodo/', reportes_views.inscritos_por_fecha_por_periodo, name='inscritos_por_fecha_por_periodo'),
+    url(r'^reportes/inscritos-por-programa/', reportes_views.inscritos_por_programa, name='inscritos_por_programa'),
 ]

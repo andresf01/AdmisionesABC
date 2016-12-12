@@ -11,11 +11,10 @@
       <div class="row">
        <div class="col-md-12">
           <div class="mu-error-area">
-            <p>Inscripción exitosa.</p>
-            <span>Por favor inicia sesión y dirígete al apartado de pagos para continuar con el proceso.</span><br />
-            <span>Recuerda que tu usuario es tu número de documento, y tu password es el número de SNP.</span><br />
+            <p>Oops! Las inscripciones ya cerraron!.</p>
+            <!--<span>La página que estas buscando no está disponible, ha sido removida, o ha cambiado.</span>-->
             <!--<h2>404</h2>-->
-            <a class="mu-post-btn" href="{% url 'login' %}">Iniciar sesión</a>
+            <a class="mu-post-btn" href="{% url 'home' %}">Volver a Universidad ABC</a>
           </div>
         </div>
       </div>
@@ -24,3 +23,5 @@
  <!-- End error section  -->
 
 {% endblock content %}
+
+

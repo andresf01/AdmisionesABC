@@ -41,6 +41,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Aspirante</th>
+                                <th>Programa</th>
                                 <th>Pagado</th>
                                 <th></th>
                             </tr>
@@ -50,6 +51,7 @@
                             <tr class="odd gradeX">
                                 <td class="center">{{ pago.id }}</td>
                                 <td class="center">{{ pago.aspirante }}</td>
+                                <td class="center">{{ pago.aspirante.programa.programa }}</td>
                                 <td class="center">
                                     {% if pago.pagado %}
                                         <i class="fa fa-check-circle" aria-hidden="true"></i>

@@ -13,7 +13,7 @@ from applications.admisiones.models import *
 
 
 class InscritosPorOfertaForm(forms.Form):
-    periodo = forms.ModelChoiceField(queryset=Periodo.objects.all(), widget=Select2Widget)
+    periodo = forms.ModelChoiceField(queryset=Periodo.objects.all().order_by('identificador'), widget=Select2Widget)
     
     def __init__(self, *args, **kwargs):
         super(InscritosPorOfertaForm, self).__init__(*args, **kwargs)
@@ -24,7 +24,7 @@ class InscritosPorOfertaForm(forms.Form):
         
         
 class InscritosPorFechaForm(forms.Form):
-    periodo = forms.ModelChoiceField(queryset=Periodo.objects.all(), widget=Select2Widget)
+    periodo = forms.ModelChoiceField(queryset=Periodo.objects.all().order_by('identificador'), widget=Select2Widget)
     
     def __init__(self, *args, **kwargs):
         super(InscritosPorFechaForm, self).__init__(*args, **kwargs)
@@ -32,3 +32,14 @@ class InscritosPorFechaForm(forms.Form):
         # Campos de el aspirante
         self.fields['periodo'].widget.attrs.update({'placeholder': 'Seleccione el Periodo', 'required':'required'})
         self.fields['periodo'].label = 'Periodo'
+        
+        
+class InscritosPorProgramaForm(forms.Form):
+    programa = forms.ModelChoiceField(queryset=Programa.objects.all().order_by('codigo'), widget=Select2Widget)
+    
+    def __init__(self, *args, **kwargs):
+        super(InscritosPorProgramaForm, self).__init__(*args, **kwargs)
+        
+        # Campos de el aspirante
+        self.fields['programa'].widget.attrs.update({'placeholder': 'Seleccione el Programa', 'required':'required'})
+        self.fields['programa'].label = 'Programa'

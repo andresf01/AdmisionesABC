@@ -5,6 +5,11 @@
 {% block specific-css %}
     <link href="{% static 'dist/css/forms.css' %}" rel="stylesheet"></link>
     <link rel="stylesheet" href="{% static 'sbadmin/vendor/morrisjs/morris.css' %}" rel="stylesheet">
+    <style type="text/css">
+        .caption {
+            text-align: center;
+        }
+    </style>
     {{ form.media }}
 {% endblock %}
 
@@ -13,7 +18,7 @@
 <div id="page-wrapper" class="full-screen-w">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Reporte: Inscritos por Periodo</h1>
+            <h1 class="page-header">Reporte: Estadísticas por Periodo</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -24,6 +29,9 @@
             <div class="panel panel-default">
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+                    <div class="caption">
+                        <h3>Cantidad de inscripciones por periodo</h3>
+                    </div>
                     <div id="inscritos_por_periodo"></div>
                 </div>
                 <!-- /.panel-body -->
@@ -33,23 +41,38 @@
         <!-- /.col-lg-12 -->
     </div>
     <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="caption">
+                        <h3>Cantidad de programas ofertados por periodo</h3>
+                    </div>
+                    <div id="oferta_por_periodo"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
 </div>
 
 {% endblock %}
 
 {% block specific-js %}
 <script src="{% static 'vendor/bootbox/bootbox.min.js' %}"></script>
-<script type="text/javascript">
-    itemWithTimer("#message-fade", 10)
-</script>
 <!-- Morris Charts JavaScript -->
 <script src="{% static 'sbadmin/vendor/raphael/raphael.min.js' %}"></script>
 <script src="{% static 'sbadmin/vendor/morrisjs/morris.min.js' %}"></script>
 <script src="{% static 'sbadmin/data/morris-data.js' %}"></script>
 <script>
+    itemWithTimer("#message-fade", 10)
+
     var data = [
-    {% for pareja in parejas %}
-        { periodo: '{{ pareja.0.identificador }}', cantidad: {{ pareja.1 }} }{% if not forloop.last %},{% endif %}
+    {% for obj in lista %}
+        { periodo: '{{ obj.periodo.nombre }}', inscritos: {{ obj.inscritos }}, admitidos: {{ obj.admitidos }} }{% if not forloop.last %},{% endif %}
     {% endfor %}
     ];
     
@@ -57,8 +80,23 @@
         element: 'inscritos_por_periodo',
         data: data,
         xkey: 'periodo',
-        ykeys: ['cantidad'],
-        labels: ['Inscritos'],
+        ykeys: ['inscritos', 'admitidos'],
+        labels: ['Inscritos', 'Admitidos'],
+        hideHover: 'auto'
+      });
+      
+    var data2 = [
+    {% for obj in lista %}
+        { periodo: '{{ obj.periodo.nombre }}', programas: {{ obj.programas }} }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+    ];
+    
+    Morris.Bar({
+        element: 'oferta_por_periodo',
+        data: data2,
+        xkey: 'periodo',
+        ykeys: ['programas'],
+        labels: ['Programas'],
         hideHover: 'auto'
       });
 </script>

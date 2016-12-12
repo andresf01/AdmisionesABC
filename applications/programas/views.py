@@ -15,6 +15,11 @@ def programas(request):
     return render(request, 'programas/programas.html', {'ofertas': ofertas})
     
     
+def programas_movil(request):
+    ofertas = Oferta.objects.filter(periodo__activo=True)
+    return render(request, 'programas/programas_movil.html', {'ofertas': ofertas})
+    
+    
 def programa(request, programa_id):
     try:
         oferta = Oferta.objects.get(periodo__activo=True, programa__codigo=programa_id)

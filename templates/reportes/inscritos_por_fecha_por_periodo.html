@@ -6,6 +6,11 @@
     <link href="{% static 'dist/css/forms.css' %}" rel="stylesheet"></link>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <link rel="stylesheet" href="{% static 'sbadmin/vendor/morrisjs/morris.css' %}" rel="stylesheet">
+    <style type="text/css">
+        .caption {
+            text-align: center;
+        }
+    </style>
     {{ form.media }}
 {% endblock %}
 
@@ -14,7 +19,7 @@
 <div id="page-wrapper" class="full-screen-w">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Reporte: Inscritos por Oferta</h1>
+            <h1 class="page-header">Reporte: Inscritos por Fecha por Periodo</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -42,6 +47,11 @@
             <div class="panel panel-default">
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+                    {% if form.cleaned_data.periodo %}
+                    <div class="caption">
+                        <h3>Inscripciones diarias del periodo {{ form.cleaned_data.periodo.nombre }}</h3>
+                    </div>
+                    {% endif %}
                     <div id="inscritos_por_periodo"></div>
                 </div>
                 <!-- /.panel-body -->
@@ -57,24 +67,23 @@
 
 {% block specific-js %}
 <script src="{% static 'vendor/bootbox/bootbox.min.js' %}"></script>
-<script type="text/javascript">
-    itemWithTimer("#message-fade", 10)
-</script>
 <!-- Morris Charts JavaScript -->
 <script src="{% static 'sbadmin/vendor/raphael/raphael.min.js' %}"></script>
 <script src="{% static 'sbadmin/vendor/morrisjs/morris.min.js' %}"></script>
 <script src="{% static 'sbadmin/data/morris-data.js' %}"></script>
 <script>
+    // itemWithTimer("#message-fade", 10)
+    
     var data = [
     {% for pareja in parejas %}
-        { oferta: '{{ pareja.0.programa.nombre }}', cantidad: {{ pareja.1 }} }{% if not forloop.last %},{% endif %}
+        { fecha: '{{ pareja.fecha | date:"Y-m-d" }}', cantidad: {{ pareja.inscritos }} }{% if not forloop.last %},{% endif %}
     {% endfor %}
     ];
     
-    Morris.Bar({
+    Morris.Area({
         element: 'inscritos_por_periodo',
         data: data,
-        xkey: 'oferta',
+        xkey: 'fecha',
         ykeys: ['cantidad'],
         labels: ['Inscritos'],
         hideHover: 'auto'

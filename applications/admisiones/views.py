@@ -25,7 +25,7 @@ def inscripcion_exitosa(request):
     
     
 def inscripciones_cerradas(request):
-    return render(request, 'error_pages/inscipciones_cerradas.html')
+    return render(request, 'error_pages/inscripciones_cerradas.html')
     
     
 def no_admisiones(request):
@@ -44,8 +44,16 @@ def info(request):
     return render(request, 'admisiones/info.html')
     
     
+def info_movil(request):
+    return render(request, 'admisiones/info_movil.html')
+    
+    
 def calendario(request):
     return render(request, 'admisiones/calendario.html')
+    
+    
+def calendario_movil(request):
+    return render(request, 'admisiones/calendario_movil.html')
     
     
 def inscripcion(request):
@@ -57,7 +65,7 @@ def inscripcion(request):
                 form = CrearAspiranteForm(request.POST, request=request)
                 if form.is_valid():
                     aspirante = form.save(commit=False)
-                    username = form.cleaned_data['documento']
+                    username = form.cleaned_data['documento'] + '-' + periodo.identificador
                     password = form.cleaned_data['snp']
                     aspirante.username = username
                     aspirante.set_password(password)
@@ -70,6 +78,8 @@ def inscripcion(request):
                     return inscripcion_exitosa(request)
         else:
             return inscripciones_cerradas(request)
+    else:
+        return no_admisiones(request)
         
     return render(request, 'admisiones/inscripcion.html', {'form':form})
     
@@ -95,22 +105,61 @@ def admitidos(request):
     
     
 def resultados_oferta(request):
-    pareja = None
-    form = ResultadosForm()
-    if request.method == 'POST':
-        form = ResultadosForm(request.POST)
-        if form.is_valid():
-            oferta = form.cleaned_data['programa']
-            if oferta:
-                if oferta.periodo.hay_resultados:
-                    resultados = oferta.aspirante_set.all().order_by('-ponderado')
-                    pareja = {}
-                    pareja['oferta'] = oferta
-                    pareja['resultados'] = resultados
-                else:
-                    return no_resultados(request)
+    periodo = None
+    try:
+        periodo = Periodo.objects.get(activo=True)
+    except Exception as ex:
+        print ex.message
+    if periodo:
+        if periodo.hay_resultados:
+            pareja = None
+            form = ResultadosForm()
+            if request.method == 'POST':
+                form = ResultadosForm(request.POST)
+                if form.is_valid():
+                    oferta = form.cleaned_data['programa']
+                    if oferta:
+                        if oferta.periodo.hay_resultados:
+                            resultados = oferta.aspirante_set.all().order_by('-ponderado')
+                            pareja = {}
+                            pareja['oferta'] = oferta
+                            pareja['resultados'] = resultados
+                        else:
+                            return no_resultados(request)
+            return render(request, 'admisiones/admitidos.html', {'form': form, 'pareja': pareja, 'ajax':True})
+        else:
+            return no_resultados(request)
+    else:
+        return no_admisiones(request)
     
-    return render(request, 'admisiones/admitidos.html', {'form': form, 'pareja': pareja, 'ajax':True})
+    
+def resultados_oferta_movil(request):
+    periodo = None
+    try:
+        periodo = Periodo.objects.get(activo=True)
+    except Exception as ex:
+        print ex.message
+    if periodo:
+        if periodo.hay_resultados:
+            pareja = None
+            form = ResultadosForm()
+            if request.method == 'POST':
+                form = ResultadosForm(request.POST)
+                if form.is_valid():
+                    oferta = form.cleaned_data['programa']
+                    if oferta:
+                        if oferta.periodo.hay_resultados:
+                            resultados = oferta.aspirante_set.all().order_by('-ponderado')
+                            pareja = {}
+                            pareja['oferta'] = oferta
+                            pareja['resultados'] = resultados
+                        else:
+                            return no_resultados(request)
+            return render(request, 'admisiones/admitidos_movil.html', {'form': form, 'pareja': pareja, 'ajax':True})
+        else:
+            return no_resultados(request)
+    else:
+        return no_admisiones(request)
     
 
 @ajax
@@ -303,6 +352,13 @@ def editar_periodo(request, periodo_id):
         if form.is_valid():
             periodo = form.save()
             messages.success(request, "Periodo modificado correctamente.")
+            if not periodo.hay_resultados:
+                aspirantes = Aspirante.objects.filter(programa__periodo__id=periodo.id)
+                for aspirante in aspirantes:
+                    aspirante.ponderado = 0
+                    aspirante.admitido = False
+                    aspirante.nota_admision = 'No admitido (cupo alcanzado)'
+                    aspirante.save()
             return redirect('listar_periodos')
         messages.error(request, "Error al modificar el periodo.")
 
@@ -311,7 +367,7 @@ def editar_periodo(request, periodo_id):
 
 @login_required
 def listar_periodos(request):
-    periodos = Periodo.objects.all()
+    periodos = Periodo.objects.all().order_by('identificador')
     return render(request, 'admisiones/listar_periodos.html', {'periodos': periodos})
     
 
@@ -329,7 +385,7 @@ def listar_eventos(request):
     
 @login_required
 def listar_aspirantes(request):
-    aspirantes = Aspirante.objects.all()
+    aspirantes = Aspirante.objects.all().order_by('id')
     return render(request, 'admisiones/listar_aspirantes.html', {'aspirantes': aspirantes, 'periodo': 'TODOS LOS PERIODOS'})
     
 @login_required
@@ -337,9 +393,7 @@ def listar_aspirantes_periodo(request, periodo_id):
     aspirantes = []
     try:
         periodo = Periodo.objects.get(identificador=periodo_id)
-        ofertas = periodo.oferta_set.all()
-        for oferta in ofertas:
-            aspirantes += oferta.aspirante_set.all()
+        aspirantes = Aspirante.objects.filter(programa__periodo__id=periodo.id).order_by('id')
     except Exception as ex:
         print ex.message
         return redirect('listar_periodos')
@@ -375,7 +429,7 @@ def editar_oferta(request, oferta_id):
         if form.is_valid():
             oferta = form.save()
             messages.success(request, "oferta modificada correctamente.")
-            return redirect('listar_oferta_periodo', periodo_id=oferta.periodo.nombre)
+            return redirect('listar_oferta_periodo', periodo_id=oferta.periodo.identificador)
         messages.error(request, "Error al modificar la oferta.")
 
     return render(request, 'admisiones/crear_oferta.html', {'form': form, 'editar': True})

@@ -12,8 +12,6 @@ from admisionesabc.global_variables import *
 from models import *
 
 
-# PERIODO = 1
-
 
 class ResultadosForm(forms.Form):
     programa = forms.ModelChoiceField(queryset=Oferta.objects.filter(periodo__activo=True), widget=Select2Widget)
@@ -32,7 +30,7 @@ class CrearAspiranteForm(ModelForm):
         
         puntaje_minimo = None
         try:
-            puntaje_minimo = Periodo.objects.get(id=PERIODO).puntaje_minimo
+            puntaje_minimo = Periodo.objects.get(activo=True).puntaje_minimo
         except Exception as ex:
             print ex.message
         
@@ -56,7 +54,7 @@ class CrearAspiranteForm(ModelForm):
         self.fields['direccion'].widget.attrs.update({'placeholder': 'Escriba su direccion', 'required':'required'})
         self.fields['telefono'].widget.attrs.update({'placeholder': 'Escriba su telefono', 'required':'required'})
         self.fields['programa'].widget.attrs.update({'placeholder': 'Seleccione el programa al que desea ingresar', 'required':'required'})
-        self.fields['programa'].queryset = Oferta.objects.filter(periodo_id=PERIODO)
+        self.fields['programa'].queryset = Oferta.objects.filter(periodo__activo=True)
 
 
     class Meta:
@@ -72,20 +70,11 @@ class CrearAspiranteForm(ModelForm):
         documento = self.cleaned_data['documento']
         if not documento.isdigit():
             raise forms.ValidationError("El numero de documento debe contener solo numeros.")
-        # ofertas = Periodo.objects.get(id=PERIODO).oferta_set.all()
-        # for oferta in ofertas:
-        #     aspirante = None
-        #     try:
-        #         aspirante = oferta.aspirante_set.get(documento=documento)
-        #     except Exception:
-        #         pass
-        #     if aspirante:
-        #         raise forms.ValidationError("Este numero de documento ya se encuentra registrado en este periodo de admisiones.")
         aspirante = None
         try:
-            aspirante = Aspirante.objects.get(programa__periodo__id=PERIODO, documento=documento)
-        except Exception:
-            pass
+            aspirante = Aspirante.objects.get(programa__periodo__activo=True, documento=documento)
+        except Exception as ex:
+            print ex.message
         if aspirante:
             raise forms.ValidationError("Este numero de documento ya se encuentra registrado en este periodo de admisiones.")
         return documento
@@ -100,18 +89,9 @@ class CrearAspiranteForm(ModelForm):
         
     def clean_snp(self):
         snp = self.cleaned_data['snp']
-        # ofertas = Periodo.objects.get(id=PERIODO).oferta_set.all()
-        # for oferta in ofertas:
-        #     aspirante = None
-        #     try:
-        #         aspirante = oferta.aspirante_set.get(snp=snp)
-        #     except Exception:
-        #         pass
-        #     if aspirante:
-        #         raise forms.ValidationError("Este Icfes SNP ya se encuentra registrado en este periodo de admisiones.")
         aspirante = None
         try:
-            aspirante = Aspirante.objects.get(programa__periodo__id=PERIODO, snp=snp)
+            aspirante = Aspirante.objects.get(programa__periodo__activo=True, snp=snp)
         except Exception:
             pass
         if aspirante:
@@ -148,7 +128,7 @@ class EditarAspiranteForm(ModelForm):
         
         puntaje_minimo = None
         try:
-            puntaje_minimo = Periodo.objects.get(id=PERIODO).puntaje_minimo
+            puntaje_minimo = Periodo.objects.get(activo=True).puntaje_minimo
         except Exception as ex:
             print ex.message
 
@@ -167,7 +147,7 @@ class EditarAspiranteForm(ModelForm):
         self.fields['direccion'].widget.attrs.update({'placeholder': 'Escriba su direccion', 'required': 'required'})
         self.fields['telefono'].widget.attrs.update({'placeholder': 'Escriba su telefono', 'required': 'required'})
         self.fields['programa'].widget.attrs.update({'placeholder': 'Seleccione el programa al que desea ingresar', 'required': 'required'})
-        self.fields['programa'].queryset = Oferta.objects.filter(periodo_id=PERIODO)
+        self.fields['programa'].queryset = Oferta.objects.filter(periodo__activo=True)
 
 
     class Meta:
@@ -183,19 +163,9 @@ class EditarAspiranteForm(ModelForm):
         documento = self.cleaned_data['documento']
         if not documento.isdigit():
             raise forms.ValidationError("El numero de documento debe contener solo numeros.")
-        # ofertas = Periodo.objects.get(id=PERIODO).oferta_set.all()
-        # for oferta in ofertas:
-        #     aspirante = None
-        #     try:
-        #         aspirante = oferta.aspirante_set.get(documento=documento)
-        #     except Exception:
-        #         pass
-        #     if aspirante:
-        #         if self.instance.id != aspirante.id:
-        #             raise forms.ValidationError("Este numero de documento ya se encuentra registrado en este periodo de admisiones.")
         aspirante = None
         try:
-            aspirante = Aspirante.objects.get(programa__periodo__id=PERIODO, documento=documento)
+            aspirante = Aspirante.objects.get(programa__periodo__activo=True, documento=documento)
         except Exception:
             pass
         if aspirante:
@@ -213,19 +183,9 @@ class EditarAspiranteForm(ModelForm):
         
     def clean_snp(self):
         snp = self.cleaned_data['snp']
-        # ofertas = Periodo.objects.get(id=PERIODO).oferta_set.all()
-        # for oferta in ofertas:
-        #     aspirante = None
-        #     try:
-        #         aspirante = oferta.aspirante_set.get(snp=snp)
-        #     except Exception:
-        #         pass
-        #     if aspirante:
-        #         if self.instance.id != aspirante.id:
-        #             raise forms.ValidationError("Este Icfes SNP ya se encuentra registrado en este periodo de admisiones.")
         aspirante = None
         try:
-            aspirante = Aspirante.objects.get(programa__periodo__id=PERIODO, snp=snp)
+            aspirante = Aspirante.objects.get(programa__periodo__activo=True, snp=snp)
         except Exception:
             pass
         if aspirante:
@@ -379,9 +339,9 @@ class CrearOfertaForm(ModelForm):
         super(CrearOfertaForm, self).__init__(*args, **kwargs)
         
         self.fields['periodo'].widget.attrs.update({'placeholder': 'Seleccione el programa al que desea ingresar', 'required': 'required'})
-        self.fields['periodo'].queryset = Periodo.objects.all()
+        self.fields['periodo'].queryset = Periodo.objects.all().order_by('identificador')
         self.fields['programa'].widget.attrs.update({'placeholder': 'Seleccione el programa al que desea ingresar', 'required': 'required'})
-        self.fields['programa'].queryset = Programa.objects.all()
+        self.fields['programa'].queryset = Programa.objects.all().order_by('codigo')
         self.fields['cupo'].widget.attrs.update({'placeholder': 'Ingrese el cupo del programa académico', 'min': 0, 'required': 'required'})
         self.fields['peso_lectura'].widget.attrs.update({'placeholder': 'Ingrese el peso de lectura crítica', 'min': 0, 'max': 100, 'required': 'required'})
         self.fields['peso_matematicas'].widget.attrs.update({'placeholder': 'Ingrese el peso de matematicas', 'min': 0, 'max': 100, 'required': 'required'})

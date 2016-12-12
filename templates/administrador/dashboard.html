@@ -1,6 +1,11 @@
 {% extends "administrador/base_sb.html" %}
 {% load staticfiles %}
 
+{% block specific-css %}
+    <link href="{% static 'dist/css/forms.css' %}" rel="stylesheet"></link>
+    <link rel="stylesheet" href="{% static 'sbadmin/vendor/morrisjs/morris.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <div id="page-wrapper">
     <div class="row">
@@ -19,11 +24,16 @@
                             <i class="fa fa-wpforms fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
+                            {% if periodo %}
                             <h4>{{ periodo.nombre }}</h4>
                             <div>Periodo Actual</div>
+                            {% else %}
+                            <h4>Sin Periodo Activo</h4>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
+                {% if periodo %}
                 <a href="{% url 'editar_periodo' periodo.identificador %}">
                     <div class="panel-footer">
                         <span class="pull-left">Editar</span>
@@ -45,6 +55,7 @@
                         <div class="clearfix"></div>
                     </div>
                 </a>
+                {% endif %}
             </div>
         </div>
         <div class="col-lg-3 col-md-6">
@@ -52,7 +63,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-3">
-                            <i class="fa fa-book fa-5x"></i>
+                            <i class="fa fa-mortar-board fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
                             <div class="huge">{{ programas }}</div>
@@ -105,36 +116,81 @@
                 </a>
             </div>
         </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-bar-chart fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">Reportes</div>
+                            <!--<div>Reportes</div>-->
+                        </div>
+                    </div>
+                </div>
+                <a href="{% url 'inscritos_por_periodo' %}">
+                    <div class="panel-footer">
+                        <span class="pull-left">Estadísticas por Periodo</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+                <a href="{% url 'inscritos_por_oferta' %}">
+                    <div class="panel-footer">
+                        <span class="pull-left">Inscritos por Oferta</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+                <a href="{% url 'inscritos_por_programa' %}">
+                    <div class="panel-footer">
+                        <span class="pull-left">Inscritos por Programa Académico</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+                <a href="{% url 'inscritos_por_fecha_por_periodo' %}">
+                    <div class="panel-footer">
+                        <span class="pull-left">Inscritos por Fecha por Periodo</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
     <!-- /.row -->
+    {% include 'messages.html' %}
     <div class="row">
         <div class="col-lg-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
-                    <div class="pull-right">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                Actions
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
-                                <li><a href="#">Action</a>
-                                </li>
-                                <li><a href="#">Another action</a>
-                                </li>
-                                <li><a href="#">Something else here</a>
-                                </li>
-                                <li class="divider"></li>
-                                <li><a href="#">Separated link</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Inscripciones diarias del periodo actual
+                    <!--<div class="pull-right">-->
+                    <!--    <div class="btn-group">-->
+                    <!--        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">-->
+                    <!--            Actions-->
+                    <!--            <span class="caret"></span>-->
+                    <!--        </button>-->
+                    <!--        <ul class="dropdown-menu pull-right" role="menu">-->
+                    <!--            <li><a href="#">Action</a>-->
+                    <!--            </li>-->
+                    <!--            <li><a href="#">Another action</a>-->
+                    <!--            </li>-->
+                    <!--            <li><a href="#">Something else here</a>-->
+                    <!--            </li>-->
+                    <!--            <li class="divider"></li>-->
+                    <!--            <li><a href="#">Separated link</a>-->
+                    <!--            </li>-->
+                    <!--        </ul>-->
+                    <!--    </div>-->
+                    <!--</div>-->
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <!--<div id="morris-area-chart"></div>-->
+                    <div id="inscritos_por_periodo"></div>
                 </div>
                 <!-- /.panel-body -->
             </div>
@@ -150,4 +206,20 @@
 <script src="{% static 'sbadmin/vendor/raphael/raphael.min.js' %}"></script>
 <script src="{% static 'sbadmin/vendor/morrisjs/morris.min.js' %}"></script>
 <script src="{% static 'sbadmin/data/morris-data.js' %}"></script>
+<script type="text/javascript">
+    var data = [
+    {% for pareja in parejas %}
+        { fecha: '{{ pareja.fecha | date:"Y-m-d" }}', cantidad: {{ pareja.inscritos }} }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+    ];
+    
+    Morris.Area({
+        element: 'inscritos_por_periodo',
+        data: data,
+        xkey: 'fecha',
+        ykeys: ['cantidad'],
+        labels: ['Inscritos'],
+        hideHover: 'auto'
+      });
+</script>
 {% endblock %}

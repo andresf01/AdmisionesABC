@@ -72,7 +72,7 @@ class Aspirante(User):
     programa = models.ForeignKey(Oferta, on_delete=models.CASCADE)
     ponderado = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     admitido = models.BooleanField(default=False)
-    nota_admision = models.CharField(max_length=128, default='', verbose_name='Nota Admisión')
+    nota_admision = models.CharField(max_length=128, default='No admitido (cupo alcanzado)', verbose_name='Nota Admisión')
     
     def __unicode__(self):
         return self.nombre + ' ' + self.apellido
